@@ -1,0 +1,218 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<!-- HEADER -->
+<div class="d-flex justify-content-between flex-wrap align-items-center mb-4">
+    <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
+        <div class="avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+            <span style="font-size: 1.5rem;">📊</span>
+        </div>
+        <div>
+            <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Admin Dashboard</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">
+                Manage students, recruiters, and view platform analytics
+            </p>
+        </div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="/" class="btn btn-outline-custom" style="text-decoration: none;">
+            <i class="bi bi-house"></i> Home
+        </a>
+        <button class="btn btn-primary-custom" onclick="window.print()">
+            <i class="bi bi-printer"></i> Print Report
+        </button>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="glass-card p-3 text-center h-100">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">👨‍🎓</div>
+            <h3 style="font-size: 2rem; font-weight: 700; color: #818cf8; margin-bottom: 4px;">{{ students|length }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Total Students</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card p-3 text-center h-100">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">🏢</div>
+            <h3 style="font-size: 2rem; font-weight: 700; color: #34d399; margin-bottom: 4px;">{{ recruiters|length }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Recruiters</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card p-3 text-center h-100">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">🎤</div>
+            <h3 style="font-size: 2rem; font-weight: 700; color: #22d3ee; margin-bottom: 4px;">{{ total_interviews }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Interviews</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card p-3 text-center h-100">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">📈</div>
+            <h3 style="font-size: 2rem; font-weight: 700; color: #10b981; margin-bottom: 4px;">{{ avg_score }}%</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Avg Score</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="glass-card p-4 mb-4">
+    <h3 class="mb-3" style="font-size: 1.1rem; color: #818cf8;">
+        <i class="bi bi-lightning"></i> Quick Actions
+    </h3>
+    <div class="d-flex gap-2 flex-wrap">
+        <button class="btn btn-primary-custom" style="padding: 12px 24px;" onclick="alert('Add Student functionality coming soon!')">
+            <i class="bi bi-person-plus"></i> Add Student
+        </button>
+        <button class="btn btn-outline-custom" style="padding: 12px 24px;" onclick="alert('Add Recruiter functionality coming soon!')">
+            <i class="bi bi-building"></i> Add Recruiter
+        </button>
+        <button class="btn btn-outline-custom" style="padding: 12px 24px;" onclick="alert('Send Notifications functionality coming soon!')">
+            <i class="bi bi-envelope"></i> Send Notifications
+        </button>
+        <button class="btn btn-outline-custom" style="padding: 12px 24px;" onclick="alert('Export Data functionality coming soon!')">
+            <i class="bi bi-download"></i> Export Data
+        </button>
+    </div>
+</div>
+
+<!-- Students Table -->
+<div class="glass-card p-4 mb-4">
+    <div class="d-flex justify-content-between flex-wrap align-items-center mb-3">
+        <h3 style="font-size: 1.1rem; margin: 0;">
+            <i class="bi bi-people-fill"></i> Registered Students
+        </h3>
+        <input type="text" placeholder="Search students..." class="form-control" style="width: 250px; max-width: 100%; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 10px 14px; border-radius: 8px;">
+    </div>
+    <div style="overflow-x: auto;">
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">
+                        <input type="checkbox" style="margin-right: 8px;">
+                    </th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">ID</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Name</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Year</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">CGPA</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Score</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Interest</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 12px;">
+                        <input type="checkbox">
+                    </td>
+                    <td style="padding: 12px;"><strong>#{{ student.id }}</strong></td>
+                    <td style="padding: 12px;">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5); width: 36px; height: 36px; font-size: 14px;">
+                                {{ student.name[0] }}
+                            </div>
+                            <div>
+                                <strong>{{ student.name }}</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin: 0;">{{ student.email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding: 12px;">{{ student.year }}st Year</td>
+                    <td style="padding: 12px;">
+                        <span class="badge badge-info">{{ student.cgpa }}</span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span class="badge badge-{{ 'success' if student.total_score >= 80 else 'warning' if student.total_score >= 60 else 'danger' }}">
+                            {{ student.total_score }}%
+                        </span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span class="badge badge-purple">{{ student.interest }}</span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <div class="d-flex gap-1">
+                            <button class="icon-btn" title="View Details" onclick="alert('View Details - Coming Soon!')" style="padding: 6px 10px;">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="icon-btn" title="Edit" onclick="alert('Edit - Coming Soon!')" style="padding: 6px 10px;">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="icon-btn" title="Delete" onclick="alert('Delete - Coming Soon!')" style="padding: 6px 10px;">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Recruiters Table -->
+<div class="glass-card p-4">
+    <div class="d-flex justify-content-between flex-wrap align-items-center mb-3">
+        <h3 style="font-size: 1.1rem; margin: 0;">
+            <i class="bi bi-briefcase-fill"></i> Registered Recruiters
+        </h3>
+        <input type="text" placeholder="Search recruiters..." class="form-control" style="width: 250px; max-width: 100%; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 10px 14px; border-radius: 8px;">
+    </div>
+    <div style="overflow-x: auto;">
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">
+                        <input type="checkbox" style="margin-right: 8px;">
+                    </th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">ID</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Company</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Recruiter</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Email</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Skills Needed</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recruiter in recruiters %}
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 12px;">
+                        <input type="checkbox">
+                    </td>
+                    <td style="padding: 12px;"><strong>#{{ recruiter.id }}</strong></td>
+                    <td style="padding: 12px;">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="avatar" style="background: linear-gradient(135deg, #10b981, #059669); width: 36px; height: 36px; font-size: 14px;">
+                                {{ recruiter.company[0] }}
+                            </div>
+                            <strong>{{ recruiter.company }}</strong>
+                        </div>
+                    </td>
+                    <td style="padding: 12px;">{{ recruiter.recruiter_name }}</td>
+                    <td style="padding: 12px; font-size: 12px;">{{ recruiter.email }}</td>
+                    <td style="padding: 12px;">
+                        <span class="badge badge-info">{{ recruiter.skills }}</span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <div class="d-flex gap-1">
+                            <button class="icon-btn" title="Contact" onclick="alert('Contact - Coming Soon!')" style="padding: 6px 10px;">
+                                <i class="bi bi-envelope"></i>
+                            </button>
+                            <button class="icon-btn" title="Edit" onclick="alert('Edit - Coming Soon!')" style="padding: 6px 10px;">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="icon-btn" title="View Profile" onclick="alert('View Profile - Coming Soon!')" style="padding: 6px 10px;">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

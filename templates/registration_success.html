@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center animate-fadeInUp" style="padding: 40px 0;">
+    <!-- Success Animation -->
+    <div style="font-size: 5rem;" class="animate-bounce mb-3">
+        ✅
+    </div>
+    
+    <h1 class="heading-large text-gradient mb-3">
+        Registration Successful!
+    </h1>
+    
+    <p class="heading-small" style="color: rgba(255,255,255,0.8); max-width: 500px; margin: 0 auto;">
+        Your account has been created successfully. Welcome to the AI Training & Placement Platform.
+    </p>
+
+    <!-- Info Cards -->
+    <div class="grid grid-3 gap-2 mt-4" style="max-width: 700px; margin: 0 auto;">
+        <div class="dashboard-card text-center hover-lift">
+            <div style="font-size: 2rem;" class="animate-float">📝</div>
+            <p style="color: white; margin-top: 10px;">Build Resume</p>
+        </div>
+        <div class="dashboard-card text-center hover-lift animate-delay-100">
+            <div style="font-size: 2rem;" class="animate-float animate-delay-100">🎤</div>
+            <p style="color: white; margin-top: 10px;">Practice Interview</p>
+        </div>
+        <div class="dashboard-card text-center hover-lift animate-delay-200">
+            <div style="font-size: 2rem;" class="animate-float animate-delay-200">📊</div>
+            <p style="color: white; margin-top: 10px;">Track Progress</p>
+        </div>
+    </div>
+
+    <!-- CTA Button -->
+    <div class="mt-4">
+        <a href="/placement">
+            <button class="primary-btn hover-scale" style="padding: 15px 40px;">
+                <i class="bi bi-arrow-right"></i> Get Started
+            </button>
+        </a>
+    </div>
+</div>
+{% endblock %}
+

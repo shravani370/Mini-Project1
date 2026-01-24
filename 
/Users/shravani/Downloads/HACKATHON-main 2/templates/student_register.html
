@@ -1,0 +1,137 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<!-- HEADER -->
+<div class="text-center mb-4">
+    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1, #4f46e5); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 2rem;">
+        👩‍🎓
+    </div>
+    <h2 style="font-size: 1.5rem; margin-bottom: 12px;">Student Registration</h2>
+    <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto;">
+        Create your account to access all placement resources
+    </p>
+</div>
+
+<!-- FORM -->
+<div class="glass-card p-4" style="max-width: 550px; margin: 0 auto;">
+    <form action="/student/register" method="POST">
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="form-label" style="color: var(--text-muted); font-size: 0.85rem;">Full Name</label>
+                    <input type="text" name="name" required class="form-control" placeholder="Enter your name" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="form-label" style="color: var(--text-muted); font-size: 0.85rem;">Email</label>
+                    <input type="email" name="email" required class="form-control" placeholder="Enter email" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="form-label" style="color: var(--text-muted); font-size: 0.85rem;">Phone</label>
+                    <input type="tel" name="phone" required class="form-control" placeholder="Enter phone" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="form-label" style="color: var(--text-muted); font-size: 0.85rem;">Year of Study</label>
+                    <select name="year" required class="form-control" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+                        <option value="" disabled selected>Select year</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="form-label" style="color: var(--text-muted); font-size: 0.85rem;">CGPA (0-10)</label>
+                    <input type="number" name="cgpa" step="0.01" min="0" max="10" required class="form-control" placeholder="Enter CGPA" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="form-label" style="color: var(--text-muted); font-size: 0.85rem;">Skills</label>
+                    <input type="text" name="skills" required class="form-control" placeholder="e.g., Python, Java, AI" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <label class="form-label" style="color: var(--text-muted); font-size: 0.85rem;">Areas of Interest</label>
+            <select name="interest" required class="form-control" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+                <option value="" disabled selected>Select interest</option>
+                <option value="AI">🤖 Artificial Intelligence</option>
+                <option value="Web">🌐 Web Development</option>
+                <option value="Cloud">☁️ Cloud Computing</option>
+                <option value="Backend">⚙️ Backend Development</option>
+                <option value="Data Science">📊 Data Science</option>
+                <option value="Mobile">📱 Mobile Development</option>
+                <option value="DevOps">🔧 DevOps</option>
+                <option value="SDE">💻 Software Development</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary-custom w-100" style="padding: 16px;">
+            🚀 Create Account
+        </button>
+    </form>
+</div>
+
+<!-- NAVIGATION -->
+<div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+    <a href="/" class="btn btn-outline-custom" style="text-decoration: none;">
+        <i class="bi bi-house"></i> Home
+    </a>
+    <a href="/student/login" class="btn btn-outline-custom" style="text-decoration: none;">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+    </a>
+</div>
+
+<!-- BENEFITS -->
+<div class="glass-card p-4 mt-4" style="max-width: 550px; margin: 0 auto;">
+    <h4 class="mb-3 text-center" style="font-size: 1rem; color: var(--white);">
+        Why Register?
+    </h4>
+    <div class="row g-2">
+        <div class="col-6">
+            <div class="d-flex align-items-center gap-2 p-2 rounded" style="background: rgba(255,255,255,0.03);">
+                <span style="color: #10b981;">✓</span>
+                <span style="font-size: 0.85rem;">AI Resume Builder</span>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="d-flex align-items-center gap-2 p-2 rounded" style="background: rgba(255,255,255,0.03);">
+                <span style="color: #10b981;">✓</span>
+                <span style="font-size: 0.85rem;">Mock Interviews</span>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="d-flex align-items-center gap-2 p-2 rounded" style="background: rgba(255,255,255,0.03);">
+                <span style="color: #10b981;">✓</span>
+                <span style="font-size: 0.85rem;">Training Path</span>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="d-flex align-items-center gap-2 p-2 rounded" style="background: rgba(255,255,255,0.03);">
+                <span style="color: #10b981;">✓</span>
+                <span style="font-size: 0.85rem;">Placement Ready</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

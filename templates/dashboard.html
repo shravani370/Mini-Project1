@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center mb-4 animate-fadeInUp">
+    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1, #4f46e5); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 2rem;">
+        👋
+    </div>
+    <h1 class="heading-medium text-gradient">
+        Welcome to AI Training & Placement Platform
+    </h1>
+    <p style="color: rgba(255,255,255,0.7); max-width: 500px; margin: 12px auto 0;">
+        Select your role to continue to your personalized dashboard
+    </p>
+</div>
+
+<!-- Role Selection Cards -->
+<div class="grid grid-3 gap-3 mb-4">
+    <!-- Student Card -->
+    <div class="feature-card text-center hover-lift animate-fadeInUp animate-delay-100">
+        <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.75rem;">
+            👩‍🎓
+        </div>
+        <h3 class="heading-small mb-2">Student</h3>
+        <p style="color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 16px;">
+            Access AI-powered resume builder, mock interviews, and placement resources
+        </p>
+        <a href="/student" class="btn btn-primary-custom w-100 hover-scale">
+            <i class="bi bi-person-plus"></i> Register as Student
+        </a>
+    </div>
+
+    <!-- Admin Card -->
+    <div class="feature-card text-center hover-lift animate-fadeInUp animate-delay-200">
+        <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #6366f1, #4f46e5); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.75rem;">
+            🛡️
+        </div>
+        <h3 class="heading-small mb-2">Admin</h3>
+        <p style="color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 16px;">
+            Manage students, recruiters, view analytics, and monitor platform activity
+        </p>
+        <a href="/admin" class="btn btn-primary-custom w-100 hover-scale">
+            <i class="bi bi-shield-lock"></i> Admin Login
+        </a>
+    </div>
+
+    <!-- Recruiter Card -->
+    <div class="feature-card text-center hover-lift animate-fadeInUp animate-delay-300">
+        <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.75rem;">
+            💼
+        </div>
+        <h3 class="heading-small mb-2">Recruiter</h3>
+        <p style="color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 16px;">
+            Browse student profiles, schedule interviews, and find top talent
+        </p>
+        <a href="/recruiter" class="btn btn-primary-custom w-100 hover-scale">
+            <i class="bi bi-briefcase"></i> Recruiter Portal
+        </a>
+    </div>
+</div>
+
+<!-- Platform Stats -->
+<div class="glass-card p-4 animate-fadeInUp animate-delay-400">
+    <h3 class="heading-small mb-3 text-center text-gradient">
+        <i class="bi bi-graph-up"></i> Platform Overview
+    </h3>
+    <div class="grid grid-4 gap-2 text-center">
+        <div class="dashboard-card hover-lift">
+            <div style="font-size: 2rem;" class="animate-float">📝</div>
+            <div class="stat-number" style="font-size: 1.5rem;">AI Resume</div>
+            <p style="font-size: 12px; color: rgba(255,255,255,0.6);">Builder</p>
+        </div>
+        <div class="dashboard-card hover-lift">
+            <div style="font-size: 2rem;" class="animate-float animate-delay-100">🎤</div>
+            <div class="stat-number" style="font-size: 1.5rem;">Mock</div>
+            <p style="font-size: 12px; color: rgba(255,255,255,0.6);">Interviews</p>
+        </div>
+        <div class="dashboard-card hover-lift">
+            <div style="font-size: 2rem;" class="animate-float animate-delay-200">📊</div>
+            <div class="stat-number" style="font-size: 1.5rem;">Placement</div>
+            <p style="font-size: 12px; color: rgba(255,255,255,0.6);">Analytics</p>
+        </div>
+        <div class="dashboard-card hover-lift">
+            <div style="font-size: 2rem;" class="animate-float animate-delay-300">🧠</div>
+            <div class="stat-number" style="font-size: 1.5rem;">AI-Powered</div>
+            <p style="font-size: 12px; color: rgba(255,255,255,0.6);">Training</p>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="glass-card p-4 mt-4 animate-fadeInUp animate-delay-500">
+    <h3 class="heading-small mb-3 text-center text-gradient">
+        <i class="bi bi-lightning"></i> Platform Features
+    </h3>
+    <div class="grid grid-2 gap-3">
+        <div class="flex align-center gap-2 hover-lift p-2 rounded" style="background: rgba(255,255,255,0.05);">
+            <span style="font-size: 1.5rem;">✨</span>
+            <span>AI-Generated Resumes</span>
+        </div>
+        <div class="flex align-center gap-2 hover-lift p-2 rounded" style="background: rgba(255,255,255,0.05);">
+            <span style="font-size: 1.5rem;">🎯</span>
+            <span>Personalized Learning Paths</span>
+        </div>
+        <div class="flex align-center gap-2 hover-lift p-2 rounded" style="background: rgba(255,255,255,0.05);">
+            <span style="font-size: 1.5rem;">📈</span>
+            <span>Interview Preparation</span>
+        </div>
+        <div class="flex align-center gap-2 hover-lift p-2 rounded" style="background: rgba(255,255,255,0.05);">
+            <span style="font-size: 1.5rem;">🔒</span>
+            <span>Secure Data Management</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

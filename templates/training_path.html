@@ -1,0 +1,20 @@
+<h2>Training Path – {{ interest }}</h2>
+<ul>
+{% for m in modules %}
+<li>{{ m }}</li>
+{% endfor %}
+</ul>
+<h2>Industry Training Path</h2>
+
+<p><strong>Skills:</strong> {{ skills }}</p>
+<p><strong>Interest:</strong> {{ interest }}</p>
+
+<hr>
+
+<h3>AI Suggestions & Training Plan</h3>
+
+<pre style="white-space: pre-wrap;">
+{{ ai_result }}
+</pre>
+
+<a href="/student">⬅ Back to Dashboard</a>

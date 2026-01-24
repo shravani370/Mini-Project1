@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Training Dashboard</title>
+
+<style>
+body{
+    margin:0;
+    padding:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:#fff;
+}
+
+/* PAGE WRAPPER */
+.container{
+    max-width:900px;
+    margin:40px auto;
+    background:#ffffff;
+    color:#111;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.35);
+}
+
+/* HEADINGS */
+h2{
+    margin-top:0;
+}
+h3{
+    margin-top:30px;
+}
+
+/* LIST */
+ul{
+    padding-left:20px;
+}
+li{
+    margin-bottom:6px;
+}
+
+/* BUTTONS */
+.btn{
+    display:inline-block;
+    margin:15px 10px 0 0;
+    padding:12px 26px;
+    background:#22c55e;
+    color:#fff;
+    text-decoration:none;
+    border-radius:30px;
+    font-size:14px;
+    transition:0.3s;
+}
+.btn:hover{
+    background:#16a34a;
+}
+
+/* CHAT */
+#chat{
+    background:#f4f4f4;
+    color:#111;
+    height:180px;
+    overflow-y:auto;
+    padding:12px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+/* INPUT */
+#msg{
+    width:70%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
+/* ASK BUTTON */
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:#fff;
+    cursor:pointer;
+}
+button:hover{
+    background:#1d4ed8;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Welcome {{ name }}</h2>
+
+<h3>Your AI Roadmap</h3>
+<ul>
+{% for r in ai_result.roadmap %}
+<li>{{ r }}</li>
+{% endfor %}
+</ul>
+
+<a href="/training-path/{{ interest }}" class="btn">Industry Training Path</a>
+<a href="/ai-interview?skills={{ skills }}&interest={{ interest }}" class="btn">
+Start AI Interview
+</a>
+
+
+
+<h3>AI Mentor Chat</h3>
+<input id="msg" placeholder="Ask your doubt here">
+<!-- <button onclick="send()">Ask AI</button> -->
+
+
+<div id="chat"></div>
+
+</div>
+
+<script>
+function send(){
+let m=document.getElementById("msg").value;
+if(m.trim()==="") return;
+
+fetch("/ai-chat",{
+method:"POST",
+headers:{"Content-Type":"application/x-www-form-urlencoded"},
+body:"message="+encodeURIComponent(m)
+})
+.then(r=>r.json())
+.then(d=>{
+document.getElementById("chat").innerHTML +=
+"<p><b>AI:</b> "+d.reply+"</p>";
+document.getElementById("msg").value="";
+});
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+
+<h2>AI Interview Result</h2>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/interview_result.css') }}">
+
+<h3>Total Score: {{ final_score }} / 10</h3>
+
+<hr>
+
+{% for h in history %}
+    <p><b>Question:</b> {{ h.question }}</p>
+    <p><b>Your Answer:</b> {{ h.answer }}</p>
+    <p><b>AI Feedback:</b> {{ h.evaluation }}</p>
+    <hr>
+{% endfor %}
+
+<a href="/student">Go Back</a>

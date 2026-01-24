@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1, #4f46e5); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 2rem;">
+        💼
+    </div>
+    <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Company Registration</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Register your company to access student profiles</p>
+</div>
+
+<form action="/recruiter/register" method="POST">
+    <div class="row mb-3">
+        <div class="col-6">
+            <input type="text" name="company" required class="form-control" placeholder="Company Name" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 14px 18px; border-radius: 10px;">
+        </div>
+        <div class="col-6">
+            <input type="tel" name="phone" required class="form-control" placeholder="Phone Number" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 14px 18px; border-radius: 10px;">
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <input type="text" name="recruiter_name" required class="form-control" placeholder="Recruiter Name" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 14px 18px; border-radius: 10px;">
+    </div>
+    
+    <div class="mb-3">
+        <input type="email" name="email" required class="form-control" placeholder="Email Address" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 14px 18px; border-radius: 10px;">
+    </div>
+    
+    <div class="mb-3">
+        <input type="text" name="skills" class="form-control" placeholder="Looking for Skills (e.g., Python, Java, AI)" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 14px 18px; border-radius: 10px;">
+    </div>
+    
+    <button type="submit" class="btn btn-primary-custom w-100" style="padding: 14px;">
+        <i class="bi bi-building"></i> Register Company
+    </button>
+</form>
+
+<div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; margin-top: 24px;">
+    <p class="text-center mb-3" style="color: var(--text-muted); font-size: 0.9rem;">Already registered?</p>
+    <a href="/recruiter/login" class="btn btn-outline-custom w-100 text-decoration-none">
+        <i class="bi bi-box-arrow-in-right"></i> Sign In
+    </a>
+</div>
+
+<div class="mt-4 text-center">
+    <a href="/" class="nav-link" style="color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;">
+        <i class="bi bi-arrow-left"></i> Back to Home
+    </a>
+</div>
+
+<script>
+var recruiterLoggedIn = '{{ session.get("recruiter_logged_in") }}';
+if (recruiterLoggedIn === 'True') {
+    window.location.href = '/recruiter_dashboard';
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,12 @@
+<h2>Mock Interview Result</h2>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/interview_result.css') }}">
+
+<p><b>Score:</b> {{ score }} / {{ out_of }}</p>
+<ul>
+  {% for f in feedback %}
+    <li>{{ f }}</li>
+  {% endfor %}
+</ul>
+
+
+<a href="/student">Go Back</a>

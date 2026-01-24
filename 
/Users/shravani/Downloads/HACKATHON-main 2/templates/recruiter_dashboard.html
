@@ -1,0 +1,161 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<!-- HEADER -->
+<div class="d-flex justify-content-between flex-wrap align-items-center mb-4">
+    <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
+        <div class="avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+            <span style="font-size: 1.5rem;">💼</span>
+        </div>
+        <div>
+            <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Recruiter Dashboard</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">
+                Welcome, {{ company_name }}! Browse student profiles.
+            </p>
+        </div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="/recruiter" class="btn btn-outline-custom" style="text-decoration: none;">
+            <i class="bi bi-building"></i> Company Info
+        </a>
+        <a href="/logout" class="btn btn-outline-custom" style="text-decoration: none;">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="glass-card p-3 text-center h-100">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">👨‍🎓</div>
+            <h3 style="font-size: 2rem; font-weight: 700; color: #818cf8; margin-bottom: 4px;">{{ students|length }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Total Students</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="glass-card p-3 text-center h-100">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">🎯</div>
+            <h3 style="font-size: 2rem; font-weight: 700; color: #34d399; margin-bottom: 4px;">{{ students|length }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Available for Hiring</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="glass-card p-3 text-center h-100">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">📈</div>
+            <h3 style="font-size: 2rem; font-weight: 700; color: #22d3ee; margin-bottom: 4px;">{{ avg_score }}%</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Avg Interview Score</p>
+        </div>
+    </div>
+</div>
+
+<!-- Search and Filter -->
+<div class="glass-card p-4 mb-4">
+    <div class="d-flex gap-3 flex-wrap align-items-center">
+        <div style="flex: 1; min-width: 250px;">
+            <input type="text" placeholder="Search students by name, skills..." class="form-control" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+        </div>
+        <select class="form-select" style="width: auto; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+            <option value="">All Years</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+        </select>
+        <select class="form-select" style="width: auto; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 16px; border-radius: 10px;">
+            <option value="">All Interests</option>
+            <option value="AI">Artificial Intelligence</option>
+            <option value="Web">Web Development</option>
+            <option value="Cloud">Cloud Computing</option>
+            <option value="Data">Data Science</option>
+        </select>
+        <button class="btn btn-primary-custom">
+            <i class="bi bi-search"></i> Search
+        </button>
+    </div>
+</div>
+
+<!-- Students Grid -->
+<h3 class="mb-3" style="font-size: 1.1rem; color: #818cf8;">
+    <i class="bi bi-people-fill"></i> Student Profiles
+</h3>
+
+{% if students %}
+<div class="row g-3 mb-4">
+    {% for student in students %}
+    <div class="col-md-6 col-lg-4">
+        <div class="glass-card p-4 h-100" style="transition: all 0.2s ease;">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5); width: 56px; height: 56px; font-size: 1.5rem;">
+                    {{ student.name[0] if student.name else 'S' }}
+                </div>
+                <div>
+                    <h4 style="font-size: 1.1rem; margin: 0;">{{ student.name }}</h4>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">{{ student.year }}st Year</p>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1" style="font-size: 0.85rem;">
+                    <span style="color: var(--text-muted);">CGPA</span>
+                    <strong>{{ student.cgpa }}</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ (student.cgpa / 10) * 100 }}%;"></div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1" style="font-size: 0.85rem;">
+                    <span style="color: var(--text-muted);">Interview Score</span>
+                    <strong>{{ student.score }}%</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ student.score }}%; background: linear-gradient(135deg, #10b981, #059669);"></div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 8px 0;">Skills</p>
+                <div class="d-flex flex-wrap gap-1">
+                    {% for skill in student.skills[:3] %}
+                    <span class="badge badge-purple">{{ skill }}</span>
+                    {% endfor %}
+                    {% if student.skills|length > 3 %}
+                    <span class="badge badge-info">+{{ student.skills|length - 3 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary-custom flex-grow-1" style="flex: 1;">
+                    <i class="bi bi-eye"></i> View
+                </button>
+                <button class="btn btn-outline-custom">
+                    <i class="bi bi-envelope"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="glass-card p-5 text-center">
+    <div style="font-size: 3rem; margin-bottom: 16px;">👥</div>
+    <h4 style="margin-bottom: 8px;">No Students Found</h4>
+    <p style="color: var(--text-muted); margin: 0;">Students will appear here after they register.</p>
+</div>
+{% endif %}
+
+<!-- NAVIGATION -->
+<div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+    <a href="/" class="btn btn-outline-custom" style="text-decoration: none;">
+        <i class="bi bi-house"></i> Home
+    </a>
+    <a href="/logout" class="btn btn-outline-custom" style="text-decoration: none;">
+        <i class="bi bi-box-arrow-right"></i> Logout
+    </a>
+</div>
+{% endblock %}
+
