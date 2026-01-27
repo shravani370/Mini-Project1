@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="practice-container">
+    <div class="page-header">
+        <h1>📝 Practice Questions</h1>
+        <p>Choose a category and start practicing</p>
+    </div>
+
+    <div class="categories-grid">
+        {% if categories %}
+            {% for category in categories %}
+            <a href="{{ url_for('practice_category', category_id=category.id) }}" class="category-card">
+                <span class="category-icon">{{ category.icon or '📚' }}</span>
+                <h3>{{ category.name }}</h3>
+                <p>{{ category.description or 'Practice questions' }}</p>
+                <span class="category-difficulty {{ category.difficulty }}">{{ category.difficulty }}</span>
+            </a>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">📚</span>
+            <p>No categories available yet.</p>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.practice-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: #94a3b8;
+    font-size: 1.1rem;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.category-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    border-color: #6366f1;
+    box-shadow: 0 10px 40px rgba(99, 102, 241, 0.1);
+}
+
+.category-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.category-card h3 {
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+}
+
+.category-card p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.category-difficulty {
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.category-difficulty.easy {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.category-difficulty.medium {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.category-difficulty.hard {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.category-difficulty.all {
+    background: rgba(99, 102, 241, 0.1);
+    color: #818cf8;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: #94a3b8;
+}
+</style>
+{% endblock %}

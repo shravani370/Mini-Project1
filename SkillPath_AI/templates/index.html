@@ -1,0 +1,691 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<div class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">🎯 AI-Powered Career Development</div>
+        <h1 class="hero-title">Build Your <span class="text-gradient">Dream Career</span></h1>
+        <p class="hero-description">
+            Discover the right skills, generate personalized learning roadmaps, 
+            track your progress, and achieve your career goals with AI-powered guidance.
+        </p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn btn-primary-custom btn-lg">
+                🚀 Start Your Journey
+            </a>
+            <a href="{{ url_for('roadmap') }}" class="btn btn-outline-custom btn-lg">
+                🗺️ View Career Paths
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Skills to Learn</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Career Paths</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">200+</span>
+                <span class="stat-label">Resources</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="roadmap-preview">
+            <div class="preview-header">
+                <span class="preview-title">Your Learning Roadmap</span>
+            </div>
+            <div class="preview-content">
+                <div class="roadmap-item completed">
+                    <span class="item-icon">✓</span>
+                    <div class="item-content">
+                        <span class="item-title">Python Basics</span>
+                        <span class="item-duration">2 weeks</span>
+                    </div>
+                </div>
+                <div class="roadmap-item active">
+                    <span class="item-icon">▶</span>
+                    <div class="item-content">
+                        <span class="item-title">Machine Learning</span>
+                        <span class="item-duration">4 weeks</span>
+                    </div>
+                </div>
+                <div class="roadmap-item pending">
+                    <span class="item-icon">○</span>
+                    <div class="item-content">
+                        <span class="item-title">Deep Learning</span>
+                        <span class="item-duration">3 weeks</span>
+                    </div>
+                </div>
+                <div class="roadmap-item pending">
+                    <span class="item-icon">○</span>
+                    <div class="item-content">
+                        <span class="item-title">ML Deployment</span>
+                        <span class="item-duration">2 weeks</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURES SECTION -->
+<section class="features-section">
+    <div class="section-header">
+        <h2>Why Choose <span class="text-gradient">SkillPath AI?</span></h2>
+        <p>Everything you need for career growth</p>
+    </div>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <h3>Skill Analysis</h3>
+            <p>AI analyzes your current skills and identifies gaps for your target role.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🗺️</div>
+            <h3>Personalized Roadmaps</h3>
+            <p>Get week-by-week learning plans tailored to your goals and schedule.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3>Curated Resources</h3>
+            <p>Access hand-picked courses, tutorials, and projects for each skill.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Progress Tracking</h3>
+            <p>Track your learning journey with visual dashboards and insights.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Goal Setting</h3>
+            <p>Set daily, weekly, and monthly goals with smart reminders.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Industry Insights</h3>
+            <p>Stay updated with job market trends and salary information.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CAREER PATHS -->
+<section class="paths-section">
+    <div class="section-header">
+        <h2>Career <span class="text-gradient">Paths</span></h2>
+        <p>Choose your path and start learning</p>
+    </div>
+    
+    <div class="paths-grid">
+        <div class="path-card">
+            <div class="path-icon">🤖</div>
+            <h3>ML Engineer</h3>
+            <p>Build and deploy machine learning models</p>
+            <div class="path-info">
+                <span>📅 24 weeks</span>
+                <span>📊 Intermediate</span>
+            </div>
+            <a href="{{ url_for('roadmap_role', role='ml_engineer') }}" class="btn-path">Start Path →</a>
+        </div>
+        
+        <div class="path-card">
+            <div class="path-icon">💻</div>
+            <h3>Full Stack Developer</h3>
+            <p>Master frontend and backend development</p>
+            <div class="path-info">
+                <span>📅 16 weeks</span>
+                <span>📊 Beginner</span>
+            </div>
+            <a href="{{ url_for('roadmap_role', role='full_stack') }}" class="btn-path">Start Path →</a>
+        </div>
+        
+        <div class="path-card">
+            <div class="path-icon">📊</div>
+            <h3>Data Scientist</h3>
+            <p>Analyze data and derive insights</p>
+            <div class="path-info">
+                <span>📅 20 weeks</span>
+                <span>📊 Intermediate</span>
+            </div>
+            <a href="{{ url_for('roadmap_role', role='data_scientist') }}" class="btn-path">Start Path →</a>
+        </div>
+        
+        <div class="path-card">
+            <div class="path-icon">☁️</div>
+            <h3>Cloud Engineer</h3>
+            <p>Design and manage cloud infrastructure</p>
+            <div class="path-info">
+                <span>📅 18 weeks</span>
+                <span>📊 Intermediate</span>
+            </div>
+            <a href="{{ url_for('roadmap_role', role='cloud_engineer') }}" class="btn-path">Start Path →</a>
+        </div>
+    </div>
+</section>
+
+<!-- INDUSTRY TRENDS -->
+<section class="trends-section">
+    <div class="section-header">
+        <h2>Industry <span class="text-gradient">Trends</span></h2>
+        <p>Hot skills in demand right now</p>
+    </div>
+    
+    <div class="trends-grid">
+        {% if trends %}
+        {% for trend in trends[:5] %}
+        <div class="trend-card">
+            <div class="trend-header">
+                <span class="trend-direction {{ 'rising' if trend.trend_direction == 'rising' else 'stable' }}">
+                    {% if trend.trend_direction == 'rising' %}📈 Rising{% else %}➡️ Stable{% endif %}
+                </span>
+                <span class="demand-score">{{ trend.demand_growth }}% growth</span>
+            </div>
+            <h4>{{ trend.skill_name or trend.job_role or 'Skill' }}</h4>
+            <div class="trend-salary">
+                <span>💰 ₹{{ (trend.avg_salary_min/100000)|int }}-{{ (trend.avg_salary_max/100000)|int }} LPA</span>
+            </div>
+            <div class="trend-companies">
+                {% if trend.top_companies %}
+                <small>{{ trend.top_companies[:50] }}...</small>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="trend-card">
+            <div class="trend-header">
+                <span class="trend-direction rising">📈 Rising</span>
+                <span class="demand-score">25% growth</span>
+            </div>
+            <h4>Machine Learning</h4>
+            <div class="trend-salary">
+                <span>💰 ₹8-20 LPA</span>
+            </div>
+        </div>
+        <div class="trend-card">
+            <div class="trend-header">
+                <span class="trend-direction rising">📈 Rising</span>
+                <span class="demand-score">18% growth</span>
+            </div>
+            <h4>AWS Cloud</h4>
+            <div class="trend-salary">
+                <span>💰 ₹6-15 LPA</span>
+            </div>
+        </div>
+        <div class="trend-card">
+            <div class="trend-header">
+                <span class="trend-direction rising">📈 Rising</span>
+                <span class="demand-score">15% growth</span>
+            </div>
+            <h4>Python Programming</h4>
+            <div class="trend-salary">
+                <span>💰 ₹5-12 LPA</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="{{ url_for('trends') }}" class="btn btn-outline">View All Trends →</a>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Transform Your Career?</h2>
+        <p>Join thousands of learners who are building their dream careers with SkillPath AI.</p>
+        <a href="{{ url_for('register') }}" class="btn btn-primary-custom btn-lg">
+            🚀 Get Started Free
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 4rem;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 600px;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 50px;
+    font-size: 0.875rem;
+    color: #22c55e;
+    margin-bottom: 1.5rem;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: #f8fafc;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-description {
+    font-size: 1.25rem;
+    color: #94a3b8;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+}
+
+.btn-primary-custom {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+}
+
+.btn-outline-custom {
+    background: transparent;
+    color: #e2e8f0;
+    padding: 0.875rem 2rem;
+    border: 2px solid #475569;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-custom:hover {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 3rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.hero-visual {
+    flex: 1;
+    max-width: 500px;
+}
+
+.roadmap-preview {
+    background: #1e293b;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.preview-header {
+    background: #334155;
+    padding: 1rem;
+}
+
+.preview-title {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.preview-content {
+    padding: 1.5rem;
+}
+
+.roadmap-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.roadmap-item.completed {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.roadmap-item.active {
+    background: rgba(34, 197, 94, 0.2);
+}
+
+.roadmap-item.pending {
+    background: #0f172a;
+}
+
+.item-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+}
+
+.roadmap-item.completed .item-icon {
+    background: #22c55e;
+    color: white;
+}
+
+.roadmap-item.active .item-icon {
+    background: #22c55e;
+    color: white;
+}
+
+.roadmap-item.pending .item-icon {
+    background: #334155;
+    color: #64748b;
+}
+
+.item-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-title {
+    font-weight: 500;
+}
+
+.item-duration {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.features-section, .paths-section, .trends-section {
+    padding: 5rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    color: #94a3b8;
+    font-size: 1.125rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    border-color: #22c55e;
+    transform: translateY(-4px);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.feature-card p {
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+.paths-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.path-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.path-card:hover {
+    border-color: #22c55e;
+    transform: translateY(-4px);
+}
+
+.path-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.path-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.path-card p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.path-info {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.btn-path {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-path:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(34, 197, 94, 0.2);
+}
+
+.trends-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.trend-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.trend-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.trend-direction {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.trend-direction.rising {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.trend-direction.stable {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.demand-score {
+    font-size: 0.75rem;
+    color: #22c55e;
+}
+
+.trend-card h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.trend-salary {
+    margin-bottom: 0.5rem;
+}
+
+.trend-salary span {
+    font-size: 0.9rem;
+    color: #22c55e;
+    font-weight: 500;
+}
+
+.trend-companies {
+    color: #64748b;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #14532d, #166534);
+    padding: 5rem 2rem;
+    text-align: center;
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cta-content p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-4 {
+    margin-top: 2rem;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #475569;
+    color: #e2e8f0;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-outline:hover {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        padding: 2rem 1rem;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-visual {
+        display: none;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}

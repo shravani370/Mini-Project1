@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Explore Skills</h1>
+    
+    {% for category, skills in skills_by_category.items() %}
+    <div class="category-section">
+        <h2>{{ category|title }}</h2>
+        <div class="skills-grid">
+            {% for skill in skills %}
+            <div class="skill-card">
+                <h3>{{ skill.name }}</h3>
+                <p>Difficulty: {{ skill.difficulty }}</p>
+                <p>Demand Score: {{ skill.demand_score }}%</p>
+                <a href="#" class="btn">Learn More</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.category-section {
+    margin-bottom: 2rem;
+}
+
+.category-section h2 {
+    text-transform: capitalize;
+    margin-bottom: 1rem;
+    color: #22c55e;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.skill-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.skill-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.skill-card p {
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+}
+
+.btn {
+    display: inline-block;
+    background: #22c55e;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+</style>
+{% endblock %}
+

@@ -1,0 +1,694 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<div class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">🚀 AI-Powered Interview Training</div>
+        <h1 class="hero-title">Master Your<br><span class="text-gradient">Technical Interviews</span></h1>
+        <p class="hero-description">
+            Practice with AI-generated interview questions, get instant feedback, 
+            track your progress, and land your dream job.
+        </p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn btn-primary-custom btn-lg">
+                🎯 Start Practicing Free
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-custom btn-lg">
+                📊 View Demo
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-number">10,000+</span>
+                <span class="stat-label">Questions</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">50,000+</span>
+                <span class="stat-label">Interviews Taken</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">95%</span>
+                <span class="stat-label">Success Rate</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="interview-preview">
+            <div class="preview-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="preview-title">AI Interview Session</span>
+            </div>
+            <div class="preview-content">
+                <div class="ai-message">
+                    <div class="avatar">🤖</div>
+                    <div class="message">
+                        <p><strong>Question 3:</strong> Explain the concept of dynamic programming with an example.</p>
+                    </div>
+                </div>
+                <div class="user-message">
+                    <div class="message">
+                        <p>Dynamic programming is a technique that solves complex problems by breaking them into overlapping subproblems...</p>
+                    </div>
+                    <div class="avatar">👤</div>
+                </div>
+                <div class="score-badge">
+                    <span class="score">85</span>
+                    <span class="label">Score</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURES SECTION -->
+<section class="features-section">
+    <div class="section-header">
+        <h2>Why Choose <span class="text-gradient">InterviewPro AI?</span></h2>
+        <p>Everything you need to ace your technical interviews</p>
+    </div>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <h3>AI-Powered Interviews</h3>
+            <p>Experience realistic mock interviews with our intelligent AI interviewer that asks follow-up questions.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3>500+ Curated Questions</h3>
+            <p>Access our extensive question bank covering DSA, OOP, System Design, and more.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Instant Feedback</h3>
+            <p>Get detailed evaluation of your answers with keyword matching and improvement suggestions.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Progress Tracking</h3>
+            <p>Visualize your improvement over time with detailed analytics and performance charts.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Role-Specific Prep</h3>
+            <p>Prepare for specific roles like SDE, Data Scientist, Frontend, Backend, and more.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h3>Gamification</h3>
+            <p>Earn badges and achievements as you complete interviews and improve your skills.</p>
+        </div>
+    </div>
+</section>
+
+<!-- QUESTION CATEGORIES -->
+<section class="categories-section">
+    <div class="section-header">
+        <h2>Question <span class="text-gradient">Categories</span></h2>
+        <p>Comprehensive coverage of all interview topics</p>
+    </div>
+    
+    <div class="categories-grid">
+        <div class="category-card">
+            <span class="category-icon">📊</span>
+            <h4>Data Structures</h4>
+            <p>Arrays, Linked Lists, Trees, Graphs</p>
+        </div>
+        <div class="category-card">
+            <span class="category-icon">🧮</span>
+            <h4>Algorithms</h4>
+            <p>Sorting, Searching, DP, Greedy</p>
+        </div>
+        <div class="category-card">
+            <span class="category-icon">🏗️</span>
+            <h4>OOP & Design</h4>
+            <p>Classes, Inheritance, Patterns</p>
+        </div>
+        <div class="category-card">
+            <span class="category-icon">🗄️</span>
+            <h4>Database</h4>
+            <p>SQL, Normalization, Indexing</p>
+        </div>
+        <div class="category-card">
+            <span class="category-icon">🔧</span>
+            <h4>System Design</h4>
+            <p>Scalability, Architecture</p>
+        </div>
+        <div class="category-card">
+            <span class="category-icon">💬</span>
+            <h4>Behavioral</h4>
+            <p>HR Questions, Soft Skills</p>
+        </div>
+        <div class="category-card">
+            <span class="category-icon">🌐</span>
+            <h4>Web Tech</h4>
+            <p>HTTP, REST, APIs</p>
+        </div>
+        <div class="category-card">
+            <span class="category-icon">🤖</span>
+            <h4>Machine Learning</h4>
+            <p>ML Concepts, Models</p>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+    <div class="section-header">
+        <h2>How It <span class="text-gradient">Works</span></h2>
+        <p>Get started in 3 simple steps</p>
+    </div>
+    
+    <div class="steps-grid">
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Create Profile</h3>
+            <p>Sign up and specify your target role and experience level for personalized questions.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Take Mock Interview</h3>
+            <p>Practice with AI-generated questions. Get instant feedback on your answers.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Track Progress</h3>
+            <p>View detailed analytics, identify weak areas, and improve your skills.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Ace Your Next Interview?</h2>
+        <p>Join thousands of students who have improved their interview skills with InterviewPro AI.</p>
+        <div class="cta-buttons">
+            <a href="{{ url_for('register') }}" class="btn btn-primary-custom btn-lg">
+                🚀 Start Free Practice
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-custom btn-lg">
+                📧 Sign Up with Email
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+    <div class="section-header">
+        <h2>What Our <span class="text-gradient">Users Say</span></h2>
+    </div>
+    
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <div class="testimonial-content">
+                <p>"InterviewPro AI helped me crack my Google interview! The AI feedback was incredibly detailed and helped me identify my weak areas."</p>
+            </div>
+            <div class="testimonial-author">
+                <div class="author-avatar">👩‍💻</div>
+                <div class="author-info">
+                    <strong>Priya Sharma</strong>
+                    <span>SDE at Google</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="testimonial-card">
+            <div class="testimonial-content">
+                <p>"The role-specific question banks are amazing. I prepared specifically for backend roles and it paid off!"</p>
+            </div>
+            <div class="testimonial-author">
+                <div class="author-avatar">👨‍💻</div>
+                <div class="author-info">
+                    <strong>Rahul Verma</strong>
+                    <span>Backend Developer at Amazon</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="testimonial-card">
+            <div class="testimonial-content">
+                <p>"Progress tracking feature is a game-changer. I can see exactly where I improved over time."</p>
+            </div>
+            <div class="testimonial-author">
+                <div class="author-avatar">👩‍🎓</div>
+                <div class="author-info">
+                    <strong>Ananya Patel</strong>
+                    <span>Final Year Student</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 4rem;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 600px;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 50px;
+    font-size: 0.875rem;
+    color: #818cf8;
+    margin-bottom: 1.5rem;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: #f8fafc;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-description {
+    font-size: 1.25rem;
+    color: #94a3b8;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+}
+
+.btn-primary-custom {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+.btn-outline-custom {
+    background: transparent;
+    color: #e2e8f0;
+    padding: 0.875rem 2rem;
+    border: 2px solid #475569;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-custom:hover {
+    border-color: #818cf8;
+    color: #818cf8;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 3rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.hero-visual {
+    flex: 1;
+    max-width: 500px;
+}
+
+.interview-preview {
+    background: #1e293b;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.preview-header {
+    background: #334155;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dot.red { background: #ef4444; }
+.dot.yellow { background: #f59e0b; }
+.dot.green { background: #22c55e; }
+
+.preview-title {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+.preview-content {
+    padding: 1.5rem;
+}
+
+.ai-message, .user-message {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ai-message .avatar, .user-message .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.ai-message .avatar {
+    background: #6366f1;
+}
+
+.user-message {
+    flex-direction: row-reverse;
+}
+
+.user-message .avatar {
+    background: #475569;
+}
+
+.message {
+    background: #334155;
+    padding: 1rem;
+    border-radius: 12px;
+    max-width: 300px;
+}
+
+.message p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+}
+
+.score-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-top: 1rem;
+}
+
+.score-badge .score {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.score-badge .label {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.features-section, .categories-section, .how-it-works, .testimonials-section {
+    padding: 5rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    color: #94a3b8;
+    font-size: 1.125rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    border-color: #6366f1;
+    transform: translateY(-4px);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.feature-card p {
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.category-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    border-color: #6366f1;
+    background: #273549;
+}
+
+.category-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.category-card h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.category-card p {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.step-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 auto 1.5rem;
+}
+
+.step-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.step-card p {
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    padding: 5rem 2rem;
+    text-align: center;
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cta-content p {
+    color: #94a3b8;
+    margin-bottom: 2rem;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.testimonial-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.testimonial-content {
+    margin-bottom: 1.5rem;
+}
+
+.testimonial-content p {
+    color: #e2e8f0;
+    font-style: italic;
+    line-height: 1.7;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    background: #6366f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.author-info strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.author-info span {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        padding: 2rem 1rem;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-visual {
+        display: none;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .hero-stats {
+        justify-content: space-between;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="interview-container">
+    <!-- Interview Header -->
+    <div class="interview-header">
+        <div class="interview-progress">
+            <span class="progress-text">Question {{ q_no }} of {{ total }}</span>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ (q_no / total) * 100 }}%"></div>
+            </div>
+        </div>
+        <div class="interview-timer">
+            <span class="timer-icon">⏱️</span>
+            <span class="timer-text" id="timer">05:00</span>
+        </div>
+        <a href="{{ url_for('skip_question') }}" class="skip-btn">Skip →</a>
+    </div>
+
+    <!-- Question Card -->
+    <div class="question-card">
+        <div class="question-meta">
+            <span class="question-category">{{ question.category|replace('_', ' ')|title }}</span>
+            <span class="question-difficulty difficulty-{{ question.difficulty }}">{{ question.difficulty|title }}</span>
+            <span class="question-points">{{ question.points }} points</span>
+        </div>
+        
+        <h2 class="question-text">{{ question.question }}</h2>
+        
+        <div class="keywords-hint">
+            <span class="hint-label">💡 Key concepts to cover:</span>
+            <div class="keywords-list">
+                {% if question.keywords %}
+                {% for keyword in question.keywords[:5] %}
+                <span class="keyword">{{ keyword }}</span>
+                {% endfor %}
+                {% else %}
+                <span class="keyword">Technical accuracy</span>
+                <span class="keyword">Clear explanation</span>
+                <span class="keyword">Examples</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Answer Form -->
+    <form method="POST" class="answer-form">
+        <div class="form-group">
+            <label for="answer">Your Answer</label>
+            <textarea 
+                id="answer" 
+                name="answer" 
+                placeholder="Type your answer here... Explain your thought process clearly. Include relevant concepts and examples."
+                rows="8"
+                required
+            ></textarea>
+            <div class="char-count">
+                <span id="charCount">0</span> characters (minimum 50)
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{{ url_for('skip_question') }}" class="btn btn-outline">Skip Question</a>
+            <button type="submit" class="btn btn-primary">Submit Answer →</button>
+        </div>
+    </form>
+
+    <!-- Tips Sidebar -->
+    <div class="tips-sidebar">
+        <h3>💡 Tips</h3>
+        <ul>
+            <li>Be specific and use examples</li>
+            <li>Explain your thought process</li>
+            <li>Mention time/space complexity</li>
+            <li>Discuss trade-offs if any</li>
+            <li>Keep your answer concise</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+// Timer countdown
+let timeLeft = {{ time_limit }};
+const timerDisplay = document.getElementById('timer');
+
+function updateTimer() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft > 0) {
+        timeLeft--;
+        setTimeout(updateTimer, 1000);
+    } else {
+        // Auto-submit when time runs out
+        document.querySelector('.answer-form').submit();
+    }
+}
+
+updateTimer();
+
+// Character counter
+const textarea = document.getElementById('answer');
+const charCount = document.getElementById('charCount');
+
+textarea.addEventListener('input', function() {
+    charCount.textContent = this.value.length;
+    
+    if (this.value.length < 50) {
+        charCount.style.color = '#ef4444';
+    } else {
+        charCount.style.color = '#22c55e';
+    }
+});
+
+// Auto-save to localStorage
+textarea.addEventListener('input', function() {
+    localStorage.setItem('interview_answer_{{ q_no }}', this.value);
+});
+
+// Restore saved answer
+window.addEventListener('load', function() {
+    const saved = localStorage.getItem('interview_answer_{{ q_no }}');
+    if (saved) {
+        textarea.value = saved;
+        charCount.textContent = saved.length;
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.interview-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 2rem;
+}
+
+.interview-header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.interview-progress {
+    flex: 1;
+}
+
+.progress-text {
+    display: block;
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #334155;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.interview-timer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #f8fafc;
+}
+
+.timer-icon {
+    font-size: 1.25rem;
+}
+
+.skip-btn {
+    color: #818cf8;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.skip-btn:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.question-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.question-meta {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.question-category {
+    background: rgba(99, 102, 241, 0.1);
+    color: #818cf8;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.question-difficulty {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.difficulty-easy {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.difficulty-medium {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.difficulty-hard {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.question-points {
+    background: #334155;
+    color: #94a3b8;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.question-text {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.keywords-hint {
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.hint-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #818cf8;
+    margin-bottom: 0.75rem;
+}
+
+.keywords-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.keyword {
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.answer-form {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    color: #f8fafc;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 200px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-group textarea::placeholder {
+    color: #64748b;
+}
+
+.char-count {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    padding: 0.875rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #475569;
+    color: #e2e8f0;
+}
+
+.btn-outline:hover {
+    border-color: #818cf8;
+    color: #818cf8;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+.tips-sidebar {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 1.5rem;
+    height: fit-content;
+}
+
+.tips-sidebar h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #334155;
+}
+
+.tips-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tips-sidebar li {
+    padding: 0.5rem 0;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #334155;
+}
+
+.tips-sidebar li:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 900px) {
+    .interview-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .tips-sidebar {
+        order: -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .interview-header {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .interview-timer {
+        order: -1;
+    }
+    
+    .question-text {
+        font-size: 1.25rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}

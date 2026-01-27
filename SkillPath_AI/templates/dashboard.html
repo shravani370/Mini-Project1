@@ -1,0 +1,543 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+        <div class="welcome-text">
+            <h1>Welcome back, {{ session.get('first_name', 'Learner') }}! 👋</h1>
+            <p>Your personalized learning journey awaits</p>
+        </div>
+        <div class="quick-stats">
+            <div class="stat-card">
+                <span class="stat-value">{{ progress.total_hours if progress else 0 }}</span>
+                <span class="stat-label">Hours</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ progress.completed_resources if progress else 0 }}</span>
+                <span class="stat-label">Completed</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ progress.active_streak if progress else 0 }}</span>
+                <span class="stat-label">Day Streak</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="dashboard-grid">
+        <!-- Learning Paths -->
+        <div class="dashboard-card paths-card">
+            <h2>📚 Your Learning Paths</h2>
+            {% if paths %}
+            <div class="paths-list">
+                {% for path in paths %}
+                <div class="path-item">
+                    <div class="path-info">
+                        <span class="path-name">{{ path.path_name }}</span>
+                        <span class="path-role">{{ path.target_role }}</span>
+                    </div>
+                    <a href="{{ url_for('roadmap') }}" class="path-link">Continue →</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">📚</span>
+                <p>No learning paths yet. Create one to start your journey!</p>
+                <a href="{{ url_for('roadmap') }}" class="btn btn-primary-small">Create Path</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Goals -->
+        <div class="dashboard-card goals-card">
+            <h2>🎯 Your Goals</h2>
+            {% if goals %}
+            <div class="goals-list">
+                {% for goal in goals %}
+                <div class="goal-item">
+                    <div class="goal-info">
+                        <span class="goal-title">{{ goal.title }}</span>
+                        <span class="goal-type">{{ goal.goal_type }}</span>
+                    </div>
+                    <span class="goal-priority {{ goal.priority }}">{{ goal.priority }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('goals_page') }}" class="view-all-link">View All Goals →</a>
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">🎯</span>
+                <p>Set goals to track your progress!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Progress Overview -->
+        <div class="dashboard-card progress-card">
+            <h2>📈 Learning Progress</h2>
+            <div class="progress-stats">
+                <div class="progress-item">
+                    <span class="progress-label">Resources Completed</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ (progress.completed_resources / 10 * 100) if progress and progress.completed_resources else 0 }}%"></div>
+                    </div>
+                    <span class="progress-value">{{ progress.completed_resources if progress else 0 }}/10</span>
+                </div>
+                <div class="progress-item">
+                    <span class="progress-label">Hours Invested</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ (progress.total_hours / 100 * 100) if progress and progress.total_hours else 0 }}%"></div>
+                    </div>
+                    <span class="progress-value">{{ progress.total_hours if progress else 0 }}h</span>
+                </div>
+            </div>
+            <a href="{{ url_for('progress_tracker') }}" class="view-all-link">View Details →</a>
+        </div>
+
+        <!-- Skills -->
+        <div class="dashboard-card skills-card">
+            <h2>💻 Skills</h2>
+            <div class="skills-overview">
+                <a href="{{ url_for('skills') }}" class="skill-btn">
+                    <span class="skill-icon">🐍</span>
+                    <span class="skill-name">Python</span>
+                </a>
+                <a href="{{ url_for('skills') }}" class="skill-btn">
+                    <span class="skill-icon">☁️</span>
+                    <span class="skill-name">Cloud</span>
+                </a>
+                <a href="{{ url_for('skills') }}" class="skill-btn">
+                    <span class="skill-icon">📊</span>
+                    <span class="skill-name">Data Science</span>
+                </a>
+                <a href="{{ url_for('skills') }}" class="skill-btn">
+                    <span class="skill-icon">⚛️</span>
+                    <span class="skill-name">Web Dev</span>
+                </a>
+            </div>
+            <a href="{{ url_for('skills') }}" class="view-all-link">Explore All Skills →</a>
+        </div>
+
+        <!-- Resources -->
+        <div class="dashboard-card resources-card">
+            <h2>📖 Recommended Resources</h2>
+            <div class="resources-list">
+                <div class="resource-item">
+                    <span class="resource-icon">📚</span>
+                    <div class="resource-info">
+                        <span class="resource-title">Python for Everybody</span>
+                        <span class="resource-meta">35 hours • Beginner</span>
+                    </div>
+                    <span class="resource-badge free">Free</span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">🎓</span>
+                    <div class="resource-info">
+                        <span class="resource-title">Machine Learning by Andrew Ng</span>
+                        <span class="resource-meta">50 hours • Intermediate</span>
+                    </div>
+                    <span class="resource-badge free">Free</span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">☁️</span>
+                    <div class="resource-info">
+                        <span class="resource-title">AWS Certified Solutions Architect</span>
+                        <span class="resource-meta">40 hours • Intermediate</span>
+                    </div>
+                    <span class="resource-badge paid">Paid</span>
+                </div>
+            </div>
+            <a href="{{ url_for('resources') }}" class="view-all-link">View All Resources →</a>
+        </div>
+
+        <!-- Industry Trends -->
+        <div class="dashboard-card trends-card">
+            <h2>📈 Industry Trends</h2>
+            <div class="trends-list">
+                <div class="trend-item">
+                    <span class="trend-skill">Machine Learning</span>
+                    <div class="trend-bar">
+                        <div class="trend-fill rising" style="width: 90%"></div>
+                    </div>
+                    <span class="trend-growth">+25%</span>
+                </div>
+                <div class="trend-item">
+                    <span class="trend-skill">AWS Cloud</span>
+                    <div class="trend-bar">
+                        <div class="trend-fill rising" style="width: 85%"></div>
+                    </div>
+                    <span class="trend-growth">+18%</span>
+                </div>
+                <div class="trend-item">
+                    <span class="trend-skill">Python</span>
+                    <div class="trend-bar">
+                        <div class="trend-fill rising" style="width: 80%"></div>
+                    </div>
+                    <span class="trend-growth">+15%</span>
+                </div>
+            </div>
+            <a href="{{ url_for('trends') }}" class="view-all-link">View All Trends →</a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Animation for welcome
+document.addEventListener('DOMContentLoaded', function() {
+    const welcomeHeader = document.querySelector('.welcome-header');
+    welcomeHeader.style.opacity = 0;
+    welcomeHeader.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+        welcomeHeader.style.transition = 'all 0.5s ease';
+        welcomeHeader.style.opacity = 1;
+        welcomeHeader.style.transform = 'translateY(0)';
+    }, 100);
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.welcome-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.welcome-text h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-text p {
+    color: #94a3b8;
+}
+
+.quick-stats {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.25rem 2rem;
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #22c55e;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.dashboard-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 1.5rem;
+}
+
+.dashboard-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #334155;
+}
+
+.paths-list, .goals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.path-item, .goal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #0f172a;
+    border-radius: 12px;
+}
+
+.path-info, .goal-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.path-name, .goal-title {
+    font-weight: 500;
+    color: #f8fafc;
+}
+
+.path-role, .goal-type {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.path-link {
+    color: #22c55e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.path-link:hover {
+    text-decoration: underline;
+}
+
+.goal-priority {
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.goal-priority.high {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.goal-priority.medium {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.goal-priority.low {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+.view-all-link {
+    display: block;
+    text-align: center;
+    color: #22c55e;
+    text-decoration: none;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+.view-all-link:hover {
+    text-decoration: underline;
+}
+
+.progress-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.progress-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.progress-label {
+    width: 100%;
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #0f172a;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.progress-value {
+    font-weight: 600;
+    color: #22c55e;
+    min-width: 50px;
+    text-align: right;
+}
+
+.skills-overview {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.skill-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.skill-btn:hover {
+    border-color: #22c55e;
+    transform: translateX(4px);
+}
+
+.skill-icon {
+    font-size: 1.5rem;
+}
+
+.skill-name {
+    font-weight: 500;
+    color: #f8fafc;
+}
+
+.resources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.resource-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #0f172a;
+    border-radius: 12px;
+}
+
+.resource-icon {
+    font-size: 1.5rem;
+}
+
+.resource-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-title {
+    font-weight: 500;
+    color: #f8fafc;
+}
+
+.resource-meta {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.resource-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.resource-badge.free {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.resource-badge.paid {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.trends-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.trend-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.trend-skill {
+    width: 120px;
+    font-size: 0.875rem;
+    color: #f8fafc;
+}
+
+.trend-bar {
+    flex: 1;
+    height: 8px;
+    background: #0f172a;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.trend-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.trend-fill.rising {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.trend-growth {
+    font-weight: 600;
+    color: #22c55e;
+    min-width: 50px;
+    text-align: right;
+}
+
+.btn-primary-small {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
+

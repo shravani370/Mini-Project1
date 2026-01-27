@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="practice-category-container">
+    <div class="page-header">
+        <a href="{{ url_for('practice') }}" class="back-link">← Back to Categories</a>
+        <h1>📝 Practice Questions</h1>
+    </div>
+
+    <div class="questions-list">
+        {% if questions %}
+            {% for question in questions %}
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-type {{ question.question_type }}">{{ question.question_type|title }}</span>
+                    <span class="question-difficulty {{ question.difficulty }}">{{ question.difficulty }}</span>
+                </div>
+                <p class="question-text">{{ question.question_text }}</p>
+                {% if question.ideal_answer %}
+                <details class="answer-toggle">
+                    <summary>Show Ideal Answer</summary>
+                    <div class="ideal-answer">{{ question.ideal_answer }}</div>
+                </details>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">📝</span>
+            <p>No questions available in this category.</p>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.practice-category-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.back-link {
+    color: #818cf8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+}
+
+.questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.question-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.question-header {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.question-type, .question-difficulty {
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.question-type.technical { background: rgba(99, 102, 241, 0.1); color: #818cf8; }
+.question-type.behavioral { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.question-type.coding { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.question-type.system_design { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+.question-difficulty.easy { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.question-difficulty.medium { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.question-difficulty.hard { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+.question-text {
+    color: #f8fafc;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.answer-toggle {
+    cursor: pointer;
+    color: #818cf8;
+    font-size: 0.9rem;
+}
+
+.answer-toggle summary {
+    padding: 0.5rem 0;
+}
+
+.ideal-answer {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+    line-height: 1.6;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem;
+    background: #1e293b;
+    border-radius: 16px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: #94a3b8;
+}
+</style>
+{% endblock %}

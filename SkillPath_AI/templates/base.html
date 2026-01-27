@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SkillPath AI{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span style="font-size: 1.5rem;">🛤️</span>
+                <span>SkillPath AI</span>
+            </a>
+            
+            <div class="nav-links">
+                {% if session.get('user_id') %}
+                    {% if session.get('role') == 'admin' %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link">Dashboard</a>
+                    {% else %}
+                        <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+                        <a href="{{ url_for('roadmap') }}" class="nav-link">My Roadmap</a>
+                        <a href="{{ url_for('skills') }}" class="nav-link">Skills</a>
+                        <a href="{{ url_for('resources') }}" class="nav-link">Resources</a>
+                        <a href="{{ url_for('goals_page') }}" class="nav-link">Goals</a>
+                        <a href="{{ url_for('progress_tracker') }}" class="nav-link">Progress</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="nav-link btn-logout">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    <a href="{{ url_for('register') }}" class="nav-link btn-primary">Get Started</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>🛤️ SkillPath AI</h4>
+                <p>Your personalized career development platform. Discover skills, build roadmaps, and achieve your goals.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="{{ url_for('roadmap') }}">Learning Paths</a>
+                <a href="{{ url_for('skills') }}">Explore Skills</a>
+                <a href="{{ url_for('resources') }}">Resources</a>
+                <a href="{{ url_for('trends') }}">Industry Trends</a>
+            </div>
+            <div class="footer-section">
+                <h4>Career Paths</h4>
+                <a href="#">ML Engineer</a>
+                <a href="#">Full Stack Developer</a>
+                <a href="#">Data Scientist</a>
+                <a href="#">Cloud Engineer</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <p>Help Center</p>
+                <p>Contact Us</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SkillPath AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

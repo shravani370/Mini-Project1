@@ -1,0 +1,460 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="result-container">
+    <!-- Score Overview -->
+    <div class="score-overview">
+        <div class="score-circle {% if percentage >= 70 %}good{% elif percentage >= 50 %}medium{% else %}low{% endif %}">
+            <div class="score-inner">
+                <span class="score-value">{{ "%.0f"|format(percentage) }}%</span>
+                <span class="score-label">Score</span>
+            </div>
+        </div>
+        
+        <div class="score-details">
+            <h1>Interview Complete! 🎉</h1>
+            <p>Great job completing your mock interview. Here's how you performed:</p>
+            
+            <div class="score-stats">
+                <div class="stat">
+                    <span class="stat-value">{{ total_score }}</span>
+                    <span class="stat-label">Total Points</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">{{ max_score }}</span>
+                    <span class="stat-label">Max Points</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">{{ answers|length }}</span>
+                    <span class="stat-label">Questions</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance by Category -->
+    {% if category_performance %}
+    <div class="performance-section">
+        <h2>📊 Performance by Category</h2>
+        <div class="category-bars">
+            {% for cat, score in category_performance.items() %}
+            <div class="category-bar">
+                <div class="category-name">{{ cat|replace('_', ' ')|title }}</div>
+                <div class="bar-container">
+                    <div class="bar-fill {% if score >= 70 %}good{% elif score >= 50 %}medium{% else %}low{% endif %}" style="width: {{ score }}%"></div>
+                </div>
+                <div class="category-score">{{ "%.0f"|format(score) }}%</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Answer Review -->
+    <div class="answers-section">
+        <h2>📝 Answer Review</h2>
+        
+        {% for answer in answers %}
+        <div class="answer-card">
+            <div class="answer-header">
+                <span class="question-number">Q{{ loop.index }}</span>
+                <span class="answer-score {% if answer.evaluation.score >= 70 %}good{% elif answer.evaluation.score >= 50 %}medium{% else %}low{% endif %}">
+                    {{ answer.evaluation.score }}%
+                </span>
+            </div>
+            
+            <div class="question-text">
+                <strong>Question:</strong> {{ answer.question }}
+            </div>
+            
+            <div class="answer-text">
+                <strong>Your Answer:</strong>
+                <p>{{ answer.answer }}</p>
+            </div>
+            
+            <div class="answer-feedback">
+                <div class="feedback-row">
+                    <span class="feedback-icon">✅</span>
+                    <div class="feedback-content">
+                        <strong>Strengths:</strong>
+                        <div class="tags">
+                            {% for strength in answer.evaluation.strengths %}
+                            <span class="tag good">{{ strength }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if answer.evaluation.improvements %}
+                <div class="feedback-row">
+                    <span class="feedback-icon">📈</span>
+                    <div class="feedback-content">
+                        <strong>Improvements:</strong>
+                        <div class="tags">
+                            {% for improvement in answer.evaluation.improvements %}
+                            <span class="tag improvement">{{ improvement }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="feedback-message">
+                    {{ answer.evaluation.feedback }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Recommendations -->
+    {% if recommendations %}
+    <div class="recommendations-section">
+        <h2>💡 Recommendations</h2>
+        <div class="recommendations-list">
+            {% for rec in recommendations %}
+            <div class="recommendation-card">
+                <span class="rec-icon">📚</span>
+                <p>{{ rec }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="actions-section">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline">← Back to Dashboard</a>
+        <a href="{{ url_for('start_interview') }}" class="btn btn-primary">🔄 Practice Again</a>
+        <a href="{{ url_for('progress') }}" class="btn btn-outline">📊 View Progress</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.result-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.score-overview {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 24px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+}
+
+.score-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.score-circle.good {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+    border: 4px solid #22c55e;
+}
+
+.score-circle.medium {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1));
+    border: 4px solid #f59e0b;
+}
+
+.score-circle.low {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+    border: 4px solid #ef4444;
+}
+
+.score-inner {
+    text-align: center;
+}
+
+.score-value {
+    display: block;
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.score-label {
+    font-size: 1rem;
+    color: #94a3b8;
+}
+
+.score-details h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.score-details > p {
+    color: #94a3b8;
+    margin-bottom: 1.5rem;
+}
+
+.score-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #818cf8;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.performance-section, .answers-section, .recommendations-section {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.performance-section h2, .answers-section h2, .recommendations-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #334155;
+}
+
+.category-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.category-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.category-name {
+    width: 150px;
+    font-weight: 500;
+}
+
+.bar-container {
+    flex: 1;
+    height: 12px;
+    background: #334155;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.bar-fill.good { background: #22c55e; }
+.bar-fill.medium { background: #f59e0b; }
+.bar-fill.low { background: #ef4444; }
+
+.category-score {
+    width: 50px;
+    text-align: right;
+    font-weight: 600;
+}
+
+.answer-card {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.answer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.question-number {
+    background: #334155;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+}
+
+.answer-score {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.answer-score.good {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.answer-score.medium {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.answer-score.low {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.question-text, .answer-text {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.answer-text p {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: #1e293b;
+    border-radius: 8px;
+    color: #e2e8f0;
+    line-height: 1.6;
+}
+
+.feedback-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.feedback-icon {
+    font-size: 1.25rem;
+}
+
+.feedback-content strong {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag {
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.tag.good {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.tag.improvement {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.feedback-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(99, 102, 241, 0.05);
+    border-left: 3px solid #6366f1;
+    border-radius: 0 8px 8px 0;
+    color: #a5b4fc;
+}
+
+.recommendations-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.recommendation-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(34, 197, 94, 0.05);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+}
+
+.rec-icon {
+    font-size: 1.5rem;
+}
+
+.recommendation-card p {
+    margin: 0;
+    color: #e2e8f0;
+    line-height: 1.5;
+}
+
+.actions-section {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #475569;
+    color: #e2e8f0;
+}
+
+.btn-outline:hover {
+    border-color: #818cf8;
+    color: #818cf8;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+@media (max-width: 768px) {
+    .score-overview {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .score-stats {
+        justify-content: center;
+    }
+    
+    .category-bar {
+        flex-wrap: wrap;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}InterviewPro AI{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span style="font-size: 1.5rem;">🎯</span>
+                <span>InterviewPro AI</span>
+            </a>
+            
+            <div class="nav-links">
+                {% if session.get('user_id') %}
+                    {% if session.get('role') == 'admin' %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link">Dashboard</a>
+                        <a href="{{ url_for('admin_questions') }}" class="nav-link">Questions</a>
+                        <a href="{{ url_for('admin_achievements') }}" class="nav-link">Achievements</a>
+                    {% else %}
+                        <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+                        <a href="{{ url_for('start_interview') }}" class="nav-link">Start Interview</a>
+                        <a href="{{ url_for('progress') }}" class="nav-link">Progress</a>
+                        <a href="{{ url_for('practice') }}" class="nav-link">Practice</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="nav-link btn-logout">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    <a href="{{ url_for('register') }}" class="nav-link btn-primary">Get Started</a>
+                {% endif %}
+            </div>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>🎯 InterviewPro AI</h4>
+                <p>Your AI-powered interview preparation platform. Practice, evaluate, and improve your interview skills.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="{{ url_for('start_interview') }}">Start Interview</a>
+                <a href="{{ url_for('practice') }}">Practice Questions</a>
+                <a href="{{ url_for('progress') }}">Track Progress</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="#">Interview Tips</a>
+                <a href="#">Resume Guide</a>
+                <a href="#">Career Advice</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>support@interviewpro.ai</p>
+                <p>Help Center</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 InterviewPro AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('mobile-open');
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
