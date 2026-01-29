@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="page-header">
+        <h1>📝 Manage Questions</h1>
+        <p>Add and manage interview questions</p>
+    </div>
+
+    <div class="admin-content">
+        <div class="add-question-form">
+            <h2>Add New Question</h2>
+            <form method="POST" action="{{ url_for('admin_add_question') }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="category_id" required>
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Question Type</label>
+                        <select name="question_type" required>
+                            <option value="technical">Technical</option>
+                            <option value="behavioral">Behavioral</option>
+                            <option value="coding">Coding</option>
+                            <option value="system_design">System Design</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <textarea name="question_text" rows="3" required placeholder="Enter your question here..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Ideal Answer</label>
+                    <textarea name="ideal_answer" rows="3" placeholder="Enter the ideal answer..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Keywords (comma-separated)</label>
+                        <input type="text" name="keywords" placeholder="keyword1, keyword2, keyword3">
+                    </div>
+                    <div class="form-group">
+                        <label>Difficulty</label>
+                        <select name="difficulty" required>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Points</label>
+                        <input type="number" name="points" value="10" min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Time (minutes)</label>
+                        <input type="number" name="estimated_time" value="5" min="1" max="30">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Add Question</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: #94a3b8;
+}
+
+.admin-content {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.add-question-form h2 {
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #f8fafc;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+</style>
+{% endblock %}
+

@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="challenges-container">
+    <div class="page-header">
+        <div class="streak-badge">
+            <span class="streak-fire">🔥</span>
+            <span class="streak-count">{{ streak }}</span>
+            <span class="streak-label">Day Streak!</span>
+        </div>
+        <h1>🎯 Daily Challenges</h1>
+        <p>Complete challenges to earn XP and climb the leaderboard!</p>
+    </div>
+
+    <!-- XP Progress -->
+    <div class="xp-card">
+        <div class="xp-info">
+            <span class="xp-icon">⚡</span>
+            <span class="xp-value">{{ user_xp }} XP</span>
+        </div>
+        <div class="xp-bar">
+            <div class="xp-fill" style="width: {{ (user_xp % 500) / 5 }}%"></div>
+        </div>
+        <span class="xp-next">{{ 500 - (user_xp % 500) }} XP to next level</span>
+    </div>
+
+    <!-- Motivational Quote -->
+    <div class="quote-card">
+        <span class="quote-icon">💬</span>
+        <p class="quote-text">"{{ quote }}"</p>
+    </div>
+
+    <!-- Challenges List -->
+    <div class="challenges-list">
+        <h2>Today's Challenges</h2>
+        {% for challenge in challenges %}
+        <div class="challenge-card {% if challenge.id in completed_challenges %}completed{% endif %}">
+            <div class="challenge-icon">
+                {% if challenge.type == 'technical' %}💻
+                {% elif challenge.type == 'behavioral' %}🗣️
+                {% elif challenge.type == 'coding' %}🧑‍💻
+                {% elif challenge.type == 'speed' %}⚡
+                {% elif challenge.type == 'streak' %}🔥{% endif %}
+            </div>
+            <div class="challenge-info">
+                <h3>{{ challenge.title }}</h3>
+                <p>{{ challenge.description }}</p>
+                <div class="challenge-meta">
+                    <span class="xp-reward">+{{ challenge.xp_reward }} XP</span>
+                </div>
+            </div>
+            <div class="challenge-action">
+                {% if challenge.id in completed_challenges %}
+                <span class="completed-badge">✓ Completed</span>
+                {% else %}
+                <a href="{{ url_for('complete_challenge', challenge_id=challenge.id) }}" class="btn btn-primary">Complete</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Challenge Tips -->
+    <div class="tips-section">
+        <h3>💡 Tips</h3>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <span class="tip-icon">⏰</span>
+                <p>Complete at least one challenge daily to maintain your streak!</p>
+            </div>
+            <div class="tip-card">
+                <span class="tip-icon">🎯</span>
+                <p>Focus on your weak areas for maximum improvement!</p>
+            </div>
+            <div class="tip-card">
+                <span class="tip-icon">🏆</span>
+                <p>Earn bonus XP by completing all challenges in a day!</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.challenges-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+}
+
+.streak-fire {
+    font-size: 1.5rem;
+}
+
+.streak-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.streak-label {
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: #94a3b8;
+}
+
+.xp-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.xp-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.xp-icon {
+    font-size: 1.5rem;
+}
+
+.xp-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fbbf24;
+}
+
+.xp-bar {
+    height: 12px;
+    background: #0f172a;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    border-radius: 6px;
+    transition: width 0.3s ease;
+}
+
+.xp-next {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.quote-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.quote-icon {
+    font-size: 1.5rem;
+}
+
+.quote-text {
+    color: #e2e8f0;
+    font-style: italic;
+    line-height: 1.6;
+}
+
+.challenges-list h2 {
+    margin-bottom: 1rem;
+}
+
+.challenge-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.challenge-card:hover {
+    border-color: #6366f1;
+}
+
+.challenge-card.completed {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.challenge-icon {
+    font-size: 2.5rem;
+}
+
+.challenge-info {
+    flex: 1;
+}
+
+.challenge-info h3 {
+    color: #f8fafc;
+    margin-bottom: 0.25rem;
+}
+
+.challenge-info p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.challenge-meta {
+    display: flex;
+    gap: 1rem;
+}
+
+.xp-reward {
+    color: #fbbf24;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.completed-badge {
+    color: #22c55e;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.tips-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #334155;
+}
+
+.tips-section h3 {
+    margin-bottom: 1rem;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.tip-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.tip-icon {
+    font-size: 1.5rem;
+}
+
+.tip-card p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .challenge-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .challenge-meta {
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+

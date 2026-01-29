@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="result-container">
+    <div class="result-card">
+        <div class="score-circle">
+            <span class="percentage">{{ "%.0f"|format(percentage) }}%</span>
+        </div>
+        
+        <h1>{% if percentage >= 80 %}🎉 Excellent!{% elif percentage >= 60 %}👍 Good Job!{% else %}💪 Keep Practicing!{% endif %}</h1>
+        
+        <div class="score-details">
+            <p>You got <strong>{{ score }}</strong> out of <strong>{{ total }}</strong> questions correct!</p>
+        </div>
+        
+        <div class="xp-earned">
+            <span class="xp-icon">⚡</span>
+            <span class="xp-value">+{{ "%.0f"|format(percentage) }} XP</span>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{{ url_for('assessment') }}" class="btn btn-primary">Try Again</a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.result-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.result-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+}
+
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+}
+
+.percentage {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+}
+
+.result-card h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.score-details {
+    color: #94a3b8;
+    margin-bottom: 2rem;
+}
+
+.score-details strong {
+    color: #f8fafc;
+}
+
+.xp-earned {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    margin-bottom: 2rem;
+}
+
+.xp-icon {
+    font-size: 1.5rem;
+}
+
+.xp-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fbbf24;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-outline {
+    background: transparent;
+    color: #818cf8;
+    border: 1px solid #6366f1;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
+

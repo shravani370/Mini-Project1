@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="xp-container">
+    <div class="page-header">
+        <h1>🏆 Achievements & XP</h1>
+        <p>Earn XP and unlock badges!</p>
+    </div>
+
+    <!-- Level Progress -->
+    <div class="level-card">
+        <div class="level-info">
+            <div class="level-badge">Level {{ level }}</div>
+            <div class="level-title">
+                {% if level == 1 %}Interview Newbie
+                {% elif level == 2 %}Practice Apprentice
+                {% elif level == 3 %}Question Queen/King
+                {% elif level == 4 %}Interview Pro
+                {% elif level == 5 %}Mock Master
+                {% else %}Interview Legend{% endif %}
+            </div>
+        </div>
+        <div class="xp-progress">
+            <div class="xp-bar">
+                <div class="xp-fill" style="width: {{ (user_xp % 500) / 5 }}%"></div>
+            </div>
+            <div class="xp-labels">
+                <span>{{ user_xp }} XP</span>
+                <span>{{ user_xp + xp_to_next }} XP</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badges Grid -->
+    <div class="badges-section">
+        <h2>All Badges</h2>
+        <div class="badges-grid">
+            {% for badge in badges %}
+            <div class="badge-card">
+                <div class="badge-icon">{{ badge.icon }}</div>
+                <h3>{{ badge.name }}</h3>
+                <p>{{ badge.desc }}</p>
+                <div class="badge-xp">+{{ badge.xp }} XP</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="stats-summary">
+        <div class="stat-item">
+            <span class="stat-value">{{ earned_xp }}</span>
+            <span class="stat-label">XP Earned</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">{{ total_possible }}</span>
+            <span class="stat-label">Total Possible</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">{{ "%.0f"|format(earned_xp / total_possible * 100) }}%</span>
+            <span class="stat-label">Completion</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.xp-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: #94a3b8;
+}
+
+.level-card {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.level-info {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.level-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.level-title {
+    color: #94a3b8;
+}
+
+.xp-progress {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.xp-bar {
+    height: 20px;
+    background: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.xp-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.badges-section {
+    margin-bottom: 2rem;
+}
+
+.badges-section h2 {
+    margin-bottom: 1.5rem;
+}
+
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.badge-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.badge-card:hover {
+    transform: translateY(-4px);
+    border-color: #6366f1;
+}
+
+.badge-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.badge-card h3 {
+    color: #f8fafc;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.badge-card p {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+
+.badge-xp {
+    color: #fbbf24;
+    font-weight: 600;
+}
+
+.stats-summary {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 2rem;
+    background: #1e293b;
+    border-radius: 16px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #818cf8;
+}
+
+.stat-label {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+    .stats-summary {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+

@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="resume-preview-container">
+    <div class="preview-header">
+        <h1>📄 Resume Preview</h1>
+        <p>Review your resume before downloading</p>
+        <div class="preview-actions">
+            <a href="{{ url_for('download_resume') }}" class="btn btn-primary">Download as Text</a>
+            <a href="{{ url_for('resume_builder') }}" class="btn btn-secondary">Edit Resume</a>
+        </div>
+    </div>
+
+    <div class="resume-preview">
+        <div class="resume-header">
+            <h1>{{ resume.full_name or 'Your Name' }}</h1>
+            <div class="contact-info">
+                {% if resume.email %}<span>📧 {{ resume.email }}</span>{% endif %}
+                {% if resume.phone %}<span>📱 {{ resume.phone }}</span>{% endif %}
+                {% if resume.linkedin %}<span>🔗 <a href="{{ resume.linkedin }}" target="_blank">LinkedIn</a></span>{% endif %}
+                {% if resume.github %}<span>💻 <a href="{{ resume.github }}" target="_blank">GitHub</a></span>{% endif %}
+            </div>
+        </div>
+
+        {% if resume.summary %}
+        <div class="resume-section">
+            <h2>Professional Summary</h2>
+            <p>{{ resume.summary }}</p>
+        </div>
+        {% endif %}
+
+        {% if resume.skills %}
+        <div class="resume-section">
+            <h2>Skills</h2>
+            <div class="skills-list">
+                {% for skill in resume.skills %}
+                <span class="skill-tag">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if resume.education %}
+        <div class="resume-section">
+            <h2>Education</h2>
+            {% for edu in resume.education %}
+            <div class="resume-item">
+                <h3>{{ edu.institution }}</h3>
+                <p class="item-subtitle">{{ edu.degree }} {% if edu.year %}({{ edu.year }}){% endif %}</p>
+                {% if edu.cgpa %}
+                <p class="item-detail">CGPA: {{ edu.cgpa }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if resume.experience %}
+        <div class="resume-section">
+            <h2>Experience</h2>
+            {% for exp in resume.experience %}
+            <div class="resume-item">
+                <h3>{{ exp.position }} at {{ exp.company }}</h3>
+                {% if exp.duration %}
+                <p class="item-subtitle">{{ exp.duration }}</p>
+                {% endif %}
+                {% if exp.description %}
+                <p class="item-description">{{ exp.description }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if resume.projects %}
+        <div class="resume-section">
+            <h2>Projects</h2>
+            {% for proj in resume.projects %}
+            <div class="resume-item">
+                <h3>{{ proj.name }}</h3>
+                {% if proj.description %}
+                <p class="item-description">{{ proj.description }}</p>
+                {% endif %}
+                {% if proj.technologies %}
+                <p class="item-detail"><strong>Technologies:</strong> {{ proj.technologies }}</p>
+                {% endif %}
+                {% if proj.link %}
+                <p class="item-detail"><strong>Link:</strong> <a href="{{ proj.link }}" target="_blank">{{ proj.link }}</a></p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if resume.certifications %}
+        <div class="resume-section">
+            <h2>Certifications</h2>
+            <ul class="cert-list">
+                {% for cert in resume.certifications %}
+                <li>
+                    <strong>{{ cert.name }}</strong>
+                    {% if cert.issuer %} - {{ cert.issuer }}{% endif %}
+                    {% if cert.year %} ({{ cert.year }}){% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.resume-preview-container {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.preview-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.preview-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.preview-header p {
+    color: #94a3b8;
+    margin-bottom: 1.5rem;
+}
+
+.preview-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn {
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #6366f1;
+    border: 2px solid #6366f1;
+}
+
+.btn-secondary:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.resume-preview {
+    background: white;
+    color: #1e293b;
+    padding: 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.resume-header {
+    text-align: center;
+    border-bottom: 2px solid #6366f1;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.resume-header h1 {
+    color: #1e293b;
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.contact-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.contact-info a {
+    color: #6366f1;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+.resume-section {
+    margin-bottom: 2rem;
+}
+
+.resume-section h2 {
+    color: #6366f1;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.resume-item {
+    margin-bottom: 1.25rem;
+}
+
+.resume-item h3 {
+    color: #1e293b;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.item-subtitle {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.item-description {
+    color: #475569;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+}
+
+.item-detail {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+.item-detail a {
+    color: #6366f1;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skill-tag {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.cert-list {
+    list-style: none;
+    padding: 0;
+}
+
+.cert-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.cert-list li:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}
+

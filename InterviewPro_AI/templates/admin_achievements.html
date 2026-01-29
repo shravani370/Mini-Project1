@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="page-header">
+        <h1>🏆 Manage Achievements</h1>
+        <p>View and manage all achievements</p>
+    </div>
+
+    <div class="achievements-grid">
+        {% if achievements %}
+            {% for achievement in achievements %}
+            <div class="achievement-card">
+                <div class="achievement-icon">{{ achievement.icon }}</div>
+                <div class="achievement-info">
+                    <h3>{{ achievement.name }}</h3>
+                    <p>{{ achievement.description }}</p>
+                    <div class="achievement-meta">
+                        <span class="achievement-points">+{{ achievement.points }} XP</span>
+                        <span class="achievement-category">{{ achievement.category }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">🏆</span>
+            <p>No achievements configured yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: #94a3b8;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.achievement-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.achievement-icon {
+    font-size: 3rem;
+}
+
+.achievement-info h3 {
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+}
+
+.achievement-info p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+.achievement-meta {
+    display: flex;
+    gap: 1rem;
+}
+
+.achievement-points {
+    color: #fbbf24;
+    font-weight: 600;
+}
+
+.achievement-category {
+    color: #818cf8;
+    font-size: 0.85rem;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+    background: #1e293b;
+    border-radius: 16px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: #94a3b8;
+}
+</style>
+{% endblock %}
+

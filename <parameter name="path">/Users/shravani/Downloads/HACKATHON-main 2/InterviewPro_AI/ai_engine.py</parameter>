@@ -1,0 +1,375 @@
+<parameter name="content">"""
+InterviewPro AI - AI Integration Module
+Handles interview question generation, answer evaluation, and follow-up questions
+"""
+
+import os
+import json
+import random
+
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
+    print("OpenAI package not installed. Run: pip install openai")
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_MODEL = "gpt-3.5-turbo"
+
+QUESTION_BANK = {
+    "data_structures": {
+        "easy": [
+            {"q": "What is the difference between an array and a linked list?", "a": "Arrays have fixed size and O(1) random access. Linked lists are dynamic with O(1) insertion/deletion.", "keywords": ["array", "linked list", "O(1)", "random access", "dynamic"]},
+            {"q": "What is a stack?", "a": "A stack is a LIFO data structure where elements are added and removed from the top.", "keywords": ["LIFO", "push", "pop", "top"]},
+            {"q": "What is a queue?", "a": "A queue is a FIFO data structure where elements are added at rear and removed from front.", "keywords": ["FIFO", "enqueue", "dequeue", "front", "rear"]},
+            {"q": "What is a binary tree?", "a": "A binary tree is a tree data structure where each node has at most two children.", "keywords": ["tree", "nodes", "children", "root"]},
+            {"q": "What is a hash table?", "a": "A hash table stores key-value pairs using a hash function.", "keywords": ["hash", "key-value", "collision", "O(1)"]},
+        ],
+        "medium": [
+            {"q": "Explain the different types of binary trees.", "a": "Full: every node has 0 or 2 children. Complete: all levels filled except last.", "keywords": ["full", "complete", "perfect", "levels"]},
+            {"q": "How do you detect a cycle in a linked list?", "a": "Use Floyd's cycle detection algorithm with slow and fast pointers.", "keywords": ["Floyd", "slow pointer", "fast pointer", "cycle"]},
+            {"q": "What is the difference between BFS and DFS?", "a": "BFS explores level by level using a queue. DFS explores depth-first.", "keywords": ["BFS", "DFS", "queue", "recursion", "stack"]},
+            {"q": "Explain heap data structure and its types.", "a": "A complete binary tree with heap property. Min-heap: parent <= children.", "keywords": ["heap", "complete binary tree", "min-heap", "max-heap"]},
+            {"q": "What is a balanced binary search tree?", "a": "A BST where height difference is at most 1 (e.g., AVL, Red-Black).", "keywords": ["AVL", "Red-Black", "balanced", "height"]},
+        ],
+        "hard": [
+            {"q": "Design a LRU Cache with O(1) operations.", "a": "Use a doubly linked list for recency and hash map for O(1) lookup.", "keywords": ["LRU", "doubly linked list", "hash map", "O(1)"]},
+            {"q": "How would you implement a trie for autocomplete?", "a": "Use tree structure where each node is a character.", "keywords": ["trie", "autocomplete", "prefix", "nodes"]},
+            {"q": "Explain segment tree and its applications.", "a": "Segment tree stores data for range queries and updates in O(log n).", "keywords": ["segment tree", "range query", "lazy propagation"]},
+        ]
+    },
+    "algorithms": {
+        "easy": [
+            {"q": "What is the time complexity of binary search?", "a": "O(log n) - search space halves each comparison.", "keywords": ["O(log n)", "halves", "comparison"]},
+            {"q": "What is sorting?", "a": "Arranging elements in a specific order.", "keywords": ["arrange", "order", "ascending", "descending"]},
+            {"q": "What is recursion?", "a": "A function calling itself with a base case to terminate.", "keywords": ["function", "base case", "recursive"]},
+            {"q": "What is big O notation?", "a": "Big O describes upper bound of algorithm's time/space complexity.", "keywords": ["complexity", "upper bound", "growth"]},
+        ],
+        "medium": [
+            {"q": "Explain merge sort algorithm.", "a": "Divide array into halves, sort each half, merge. Time: O(n log n).", "keywords": ["divide", "conquer", "merge", "O(n log n)"]},
+            {"q": "What is dynamic programming?", "a": "Breaking into overlapping subproblems and storing solutions.", "keywords": ["optimal substructure", "overlapping", "memoization", "tabulation"]},
+            {"q": "Explain greedy algorithm approach.", "a": "Make locally optimal choice at each step.", "keywords": ["local optimum", "global optimum", "choice"]},
+            {"q": "What is two-pointer technique?", "a": "Use two pointers based on conditions (e.g., sorted array).", "keywords": ["two pointers", "sorted array", "conditions"]},
+        ],
+        "hard": [
+            {"q": "Explain the travelling salesman problem.", "a": "Find shortest path visiting all cities. NP-hard.", "keywords": ["NP-hard", "TSP", "Hamiltonian cycle", "approximation"]},
+            {"q": "How does the A* search algorithm work?", "a": "Uses f(n) = g(n) + h(n) where h is heuristic.", "keywords": ["heuristic", "admissible", "path cost", "optimal"]},
+        ]
+    },
+    "oop": {
+        "easy": [
+            {"q": "What are the four pillars of OOP?", "a": "Encapsulation, Inheritance, Polymorphism, and Abstraction.", "keywords": ["encapsulation", "inheritance", "polymorphism", "abstraction"]},
+            {"q": "What is a class?", "a": "A blueprint for creating objects with attributes and methods.", "keywords": ["blueprint", "object", "attributes", "methods"]},
+            {"q": "What is an object?", "a": "An instance of a class that contains data and behavior.", "keywords": ["instance", "data", "behavior"]},
+        ],
+        "medium": [
+            {"q": "Difference between method overloading and overriding?", "a": "Overloading: same class, different parameters. Overriding: subclass provides implementation.", "keywords": ["overloading", "overriding", "subclass", "parameters"]},
+            {"q": "What is inheritance?", "a": "A class inherits properties/methods from a parent class.", "keywords": ["parent", "child", "extends", "super"]},
+            {"q": "Explain abstraction with example.", "a": "Hiding complex implementation details.", "keywords": ["hide", "implementation", "interface"]},
+        ],
+        "hard": [
+            {"q": "Explain SOLID principles.", "a": "S: Single Responsibility, O: Open/Closed, L: Liskov, I: Interface Segregation, D: Dependency Inversion.", "keywords": ["SOLID", "SRP", "OCP", "LSP", "ISP", "DIP"]},
+            {"q": "What is composition vs inheritance?", "a": "Composition: has-a. Inheritance: is-a relationship.", "keywords": ["has-a", "is-a", "relationship"]},
+        ]
+    },
+    "database": {
+        "easy": [
+            {"q": "What is a primary key?", "a": "Unique identifier for each row. Cannot be NULL.", "keywords": ["unique", "identifier", "NULL"]},
+            {"q": "What is SQL?", "a": "Structured Query Language for managing relational databases.", "keywords": ["query", "relational", "database"]},
+            {"q": "What are DML and DDL?", "a": "DML: SELECT, INSERT, UPDATE. DDL: CREATE, ALTER, DROP.", "keywords": ["DML", "DDL", "query", "structure"]},
+        ],
+        "medium": [
+            {"q": "Difference between INNER JOIN and LEFT JOIN?", "a": "INNER: only matching rows. LEFT: all rows from left + matching from right.", "keywords": ["INNER JOIN", "LEFT JOIN", "matching", "rows"]},
+            {"q": "What is normalization?", "a": "Organizing data to reduce redundancy. 1NF, 2NF, 3NF, BCNF.", "keywords": ["normalization", "redundancy", "integrity", "BCNF"]},
+            {"q": "What is indexing?", "a": "Data structure improving query speed.", "keywords": ["index", "query speed", "B-tree", "pointers"]},
+        ],
+        "hard": [
+            {"q": "Explain ACID properties.", "a": "Atomicity: all or nothing. Consistency: valid state. Isolation: concurrent safe. Durability: permanent.", "keywords": ["Atomicity", "Consistency", "Isolation", "Durability"]},
+            {"q": "What are database locks?", "a": "Mechanisms to control concurrent access.", "keywords": ["locks", "shared", "exclusive", "deadlock"]},
+        ]
+    },
+    "system_design": {
+        "easy": [
+            {"q": "What is scalability?", "a": "System's ability to handle increased load.", "keywords": ["scalability", "load", "resources"]},
+            {"q": "What is load balancing?", "a": "Distributing traffic across multiple servers.", "keywords": ["load balancer", "traffic", "servers"]},
+        ],
+        "medium": [
+            {"q": "Design a URL shortening service.", "a": "Use hash/Base62 for short codes. Store in DB. Use Redis cache.", "keywords": ["URL", "hash", "Base62", "Redis", "collision"]},
+            {"q": "What is caching?", "a": "Store frequently accessed data in fast memory.", "keywords": ["cache", "memory", "read-heavy", "Redis"]},
+        ],
+        "hard": [
+            {"q": "Design a real-time chat app.", "a": "Use WebSocket for real-time. Store in MongoDB. Use Redis for presence.", "keywords": ["WebSocket", "MongoDB", "Redis", "E2E encryption", "presence"]},
+            {"q": "Explain CAP theorem.", "a": "Cannot have Consistency, Availability, Partition tolerance simultaneously.", "keywords": ["CAP", "Consistency", "Availability", "Partition"]},
+        ]
+    },
+    "behavioral": {
+        "easy": [
+            {"q": "Tell me about yourself.", "a": "Brief intro covering education, interests, and career goals.", "keywords": ["education", "goals", "relevant"]},
+            {"q": "What are your strengths?", "a": "Identify 2-3 relevant strengths with examples.", "keywords": ["strengths", "examples", "relevant"]},
+            {"q": "What are your weaknesses?", "a": "Honest but improving. Mention real weakness and steps to improve.", "keywords": ["weakness", "improving", "steps"]},
+        ],
+        "medium": [
+            {"q": "Describe a challenging project.", "a": "Use STAR: Situation, Task, Action, Result.", "keywords": ["STAR", "challenge", "problem-solving", "result"]},
+            {"q": "Why do you want to work here?", "a": "Show research: company values, culture match your goals.", "keywords": ["research", "values", "goals", "culture"]},
+        ],
+        "hard": [
+            {"q": "Tell me about a time you failed.", "a": "Be honest, take responsibility, explain what you learned.", "keywords": ["failure", "responsibility", "learning"]},
+            {"q": "How do you handle conflict in a team?", "a": "Stay calm, listen, find common ground, focus on solutions.", "keywords": ["conflict", "communication", "solution"]},
+        ]
+    },
+    "web_technologies": {
+        "easy": [
+            {"q": "Difference between GET and POST?", "a": "GET: parameters in URL. POST: parameters in body.", "keywords": ["GET", "POST", "URL", "body"]},
+            {"q": "What is HTTP?", "a": "Protocol for communication between client and server.", "keywords": ["HTTP", "client", "server", "request", "response"]},
+        ],
+        "medium": [
+            {"q": "What is REST API?", "a": "Architectural style using HTTP methods. Stateless, resource-based URLs.", "keywords": ["REST", "HTTP methods", "stateless", "JSON"]},
+            {"q": "Explain the DOM.", "a": "Document Object Model - tree structure representing HTML/XML.", "keywords": ["DOM", "tree", "JavaScript", "manipulate"]},
+        ],
+        "hard": [
+            {"q": "How does React work?", "a": "Virtual DOM for efficient updates. Components, state, props, hooks.", "keywords": ["Virtual DOM", "components", "state", "hooks", "reconciliation"]},
+        ]
+    },
+    "machine_learning": {
+        "easy": [
+            {"q": "What is machine learning?", "a": "Computers learn from data without explicit programming.", "keywords": ["learn", "data", "program"]},
+            {"q": "Difference between supervised and unsupervised?", "a": "Supervised: labeled data. Unsupervised: unlabeled data, finds patterns.", "keywords": ["supervised", "unsupervised", "labeled", "patterns"]},
+        ],
+        "medium": [
+            {"q": "Explain overfitting and underfitting.", "a": "Overfitting: learns noise. Underfitting: too simple.", "keywords": ["overfitting", "underfitting", "accuracy", "noise"]},
+            {"q": "What is gradient descent?", "a": "Optimization algorithm minimizing loss.", "keywords": ["gradient", "optimization", "loss", "iterative"]},
+        ],
+        "hard": [
+            {"q": "Explain bias-variance tradeoff.", "a": "High bias causes underfitting. High variance causes overfitting.", "keywords": ["bias", "variance", "underfitting", "overfitting"]},
+        ]
+    }
+}
+
+
+def generate_questions(topics, interest, count=5):
+    """Generate interview questions based on selected topics and role interest"""
+    questions = []
+    
+    if not topics or topics == "all" or (isinstance(topics, str) and topics.lower() == "all"):
+        category_map = {
+            "backend": ["data_structures", "algorithms", "database", "system_design"],
+            "frontend": ["web_technologies", "oop", "data_structures"],
+            "fullstack": ["web_technologies", "database", "oop", "algorithms"],
+            "data": ["machine_learning", "algorithms", "database"],
+            "sde": ["data_structures", "algorithms", "oop", "system_design"],
+            "ai": ["machine_learning", "algorithms", "python"],
+            "default": ["data_structures", "algorithms", "oop"]
+        }
+        categories = category_map.get(interest.lower() if interest else "default", category_map["default"])
+    else:
+        if isinstance(topics, str):
+            topics_list = [t.strip().lower() for t in topics.split(",") if t.strip()]
+        elif isinstance(topics, list):
+            topics_list = [t.strip().lower() for t in topics if t.strip()]
+        else:
+            topics_list = []
+        
+        topic_to_category = {
+            "dsa": "data_structures",
+            "data structures": "data_structures",
+            "algorithms": "algorithms",
+            "oop": "oop",
+            "object oriented programming": "oop",
+            "database": "database",
+            "sql": "database",
+            "system design": "system_design",
+            "web": "web_technologies",
+            "web technologies": "web_technologies",
+            "machine learning": "machine_learning",
+            "ml": "machine_learning",
+            "behavioral": "behavioral",
+        }
+        
+        categories = []
+        for topic in topics_list:
+            if topic in topic_to_category:
+                categories.append(topic_to_category[topic])
+            else:
+                categories.append(topic)
+    
+    num_categories = min(len(categories), max(2, (count + 1) // 2))
+    selected_categories = categories[:num_categories]
+    
+    base_questions = count // num_categories if num_categories > 0 else count
+    extra = count % num_categories if num_categories > 0 else 0
+    
+    for idx, category in enumerate(selected_categories):
+        if category not in QUESTION_BANK:
+            continue
+        
+        category_questions = []
+        for difficulty in ["easy", "medium", "hard"]:
+            if difficulty in QUESTION_BANK[category]:
+                for q in QUESTION_BANK[category][difficulty]:
+                    category_questions.append({
+                        "category": category,
+                        "difficulty": difficulty,
+                        "question": q["q"],
+                        "ideal_answer": q["a"],
+                        "keywords": q["keywords"],
+                        "points": {"easy": 10, "medium": 15, "hard": 20}[difficulty]
+                    })
+        
+        random.shuffle(category_questions)
+        num_to_take = base_questions + (1 if idx < extra else 0)
+        questions.extend(category_questions[:num_to_take])
+    
+    random.shuffle(questions)
+    return questions[:count]
+
+
+def evaluate_answer(question_data, user_answer):
+    """Evaluate user answer and provide accurate feedback"""
+    ideal_answer = question_data.get("ideal_answer", "")
+    keywords = question_data.get("keywords", [])
+    difficulty = question_data.get("difficulty", "medium")
+    
+    user_answer_lower = user_answer.lower()
+    
+    if not user_answer.strip():
+        return {
+            "score": 0,
+            "feedback": "No answer provided.",
+            "strengths": [],
+            "improvements": ["Provide an answer"],
+            "keywords_found": [],
+            "keywords_missing": keywords,
+            "ideal_answer": ideal_answer
+        }
+    
+    keywords_found = []
+    keywords_missing = []
+    
+    for keyword in keywords:
+        if keyword.lower() in user_answer_lower:
+            keywords_found.append(keyword)
+        else:
+            keywords_missing.append(keyword)
+    
+    keyword_coverage = len(keywords_found) / len(keywords) if keywords else 0
+    keyword_score = keyword_coverage * 30
+    
+    expected_min = {"easy": 30, "medium": 60, "hard": 100}
+    expected_max = {"easy": 150, "medium": 300, "hard": 500}
+    
+    min_len = expected_min.get(difficulty, 60)
+    max_len = expected_max.get(difficulty, 300)
+    answer_len = len(user_answer)
+    
+    if answer_len < min_len:
+        length_score = (answer_len / min_len) * 10
+    elif answer_len > max_len:
+        length_score = max(0, 10 - (answer_len - max_len) / 100 * 5)
+    else:
+        length_score = 10
+    
+    technical_indicators = ["because", "for example", "such as", "instance", "this means"]
+    explanation_words = sum(1 for word in technical_indicators if word in user_answer_lower)
+    technical_score = min(25, explanation_words * 5)
+    
+    structure_indicators = ["first", "second", "third", "however", "therefore"]
+    structure_words = sum(1 for word in structure_indicators if word in user_answer_lower)
+    clarity_score = min(15, structure_words * 3)
+    
+    sentences = user_answer.split('.')
+    if len(sentences) >= 2:
+        clarity_score += 5
+    
+    relevance_score = 10 if len(user_answer) > 20 else 5
+    
+    total_score = keyword_score + length_score + technical_score + clarity_score + relevance_score
+    
+    difficulty_multiplier = {"easy": 1.1, "medium": 1.0, "hard": 0.9}
+    total_score = total_score * difficulty_multiplier.get(difficulty, 1.0)
+    
+    score = min(100, max(0, int(total_score)))
+    
+    if score >= 85:
+        feedback = "Excellent answer!"
+    elif score >= 70:
+        feedback = "Strong answer!"
+    elif score >= 55:
+        feedback = "Good attempt!"
+    elif score >= 40:
+        feedback = "Fair answer."
+    else:
+        feedback = "Keep practicing!"
+    
+    feedback += f" Concepts covered: {int(keyword_coverage * 100)}%"
+    
+    return {
+        "score": score,
+        "feedback": feedback,
+        "strengths": keywords_found[:2] if keywords_found else ["Attempted"],
+        "improvements": keywords_missing[:3] if keywords_missing else ["Keep it up!"],
+        "keywords_found": keywords_found,
+        "keywords_missing": keywords_missing,
+        "ideal_answer": ideal_answer
+    }
+
+
+def generate_follow_up(question_data, user_answer):
+    """Generate follow-up questions based on user's answer"""
+    score = evaluate_answer(question_data, user_answer).get("score", 0)
+    
+    if score < 60:
+        return "Can you explain with a specific example?"
+    
+    category = question_data.get("category", "")
+    
+    follow_ups = {
+        "data_structures": "How would you implement this in production?",
+        "algorithms": "Can you think of an optimized solution?",
+        "oop": "How would you design this in a real app?",
+        "database": "How would you scale this?",
+        "system_design": "What are the bottlenecks?",
+        "behavioral": "What was the outcome?",
+        "web_technologies": "How would you test this?",
+        "machine_learning": "How would you evaluate performance?"
+    }
+    
+    return follow_ups.get(category, "Can you elaborate more?")
+
+
+def get_ai_evaluation(question, user_answer, api_key=None):
+    if not OPENAI_AVAILABLE or not api_key:
+        return None
+    
+    try:
+        client = OpenAI(api_key=api_key)
+        response = client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": "You are an expert technical interviewer."},
+                {"role": "user", "content": f"Question: {question}\n\nAnswer: {user_answer}\n\nEvaluate and return JSON with overall_score, strengths, weaknesses, feedback."}
+            ],
+            temperature=0.3
+        )
+        return json.loads(response.choices[0].message.content)
+    except Exception as e:
+        print(f"AI evaluation error: {e}")
+        return None
+
+
+def get_learning_recommendation(weak_categories):
+    recommendations = {
+        "data_structures": "Practice on LeetCode.",
+        "algorithms": "Focus on sorting, searching, DP.",
+        "oop": "Review OOP and design patterns.",
+        "database": "Practice SQL and normalization.",
+        "system_design": "Study distributed systems.",
+        "behavioral": "Prepare STAR answers.",
+        "web_technologies": "Build web projects.",
+        "machine_learning": "Learn ML fundamentals."
+    }
+    return [recommendations.get(cat, "Keep practicing!") for cat in weak_categories]
+
+
+print("InterviewPro AI Engine Loaded")
+</parameter>

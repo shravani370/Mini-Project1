@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="resume-builder-container">
+    <div class="page-header">
+        <h1>📄 Resume Builder</h1>
+        <p>Create a professional resume to showcase your skills and experience</p>
+    </div>
+
+    <form method="POST" class="resume-form">
+        <!-- Personal Information -->
+        <div class="form-section">
+            <h2>👤 Personal Information</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" name="full_name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" required placeholder="john@example.com">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" placeholder="+1 234 567 8900">
+                </div>
+                <div class="form-group">
+                    <label>LinkedIn URL</label>
+                    <input type="url" name="linkedin" placeholder="https://linkedin.com/in/johndoe">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>GitHub URL</label>
+                    <input type="url" name="github" placeholder="https://github.com/johndoe">
+                </div>
+                <div class="form-group">
+                    <label>Portfolio/Website</label>
+                    <input type="url" name="portfolio" placeholder="https://johndoe.com">
+                </div>
+            </div>
+        </div>
+
+        <!-- Professional Summary -->
+        <div class="form-section">
+            <h2>📝 Professional Summary</h2>
+            <div class="form-group">
+                <textarea name="summary" rows="4" placeholder="Write a brief summary of your professional background, key skills, and career objectives..."></textarea>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="form-section">
+            <h2>💻 Skills</h2>
+            <div class="form-group">
+                <label>List your skills (comma-separated)</label>
+                <input type="text" name="skills" placeholder="Python, JavaScript, React, Node.js, SQL, Git, Docker...">
+                <small>Separate skills with commas</small>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="form-section">
+            <h2>🎓 Education</h2>
+            <input type="hidden" name="edu_count" value="3">
+            {% for i in range(3) %}
+            <div class="nested-form education-form">
+                <h3>Education #{{ i + 1 }}</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Institution</label>
+                        <input type="text" name="edu_institution_{{ i }}" placeholder="University/College name">
+                    </div>
+                    <div class="form-group">
+                        <label>Degree</label>
+                        <input type="text" name="edu_degree_{{ i }}" placeholder="B.Tech, M.S., B.S., etc.">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Year</label>
+                        <input type="text" name="edu_year_{{ i }}" placeholder="2020 - 2024">
+                    </div>
+                    <div class="form-group">
+                        <label>CGPA/Percentage</label>
+                        <input type="text" name="edu_cgpa_{{ i }}" placeholder="8.5/10 or 85%">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Experience -->
+        <div class="form-section">
+            <h2>💼 Work Experience</h2>
+            <input type="hidden" name="exp_count" value="3">
+            {% for i in range(3) %}
+            <div class="nested-form experience-form">
+                <h3>Experience #{{ i + 1 }}</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <input type="text" name="exp_company_{{ i }}" placeholder="Company name">
+                    </div>
+                    <div class="form-group">
+                        <label>Position</label>
+                        <input type="text" name="exp_position_{{ i }}" placeholder="Software Developer, Intern, etc.">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Duration</label>
+                        <input type="text" name="exp_duration_{{ i }}" placeholder="Jan 2023 - Present">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="exp_description_{{ i }}" rows="3" placeholder="Describe your responsibilities and achievements..."></textarea>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+<!-- Projects -->
+        <div class="form-section">
+            <h2>🚀 Projects</h2>
+            <input type="hidden" name="proj_count" value="3">
+            {% for i in range(3) %}
+            <div class="nested-form project-form">
+                <h3>Project #{{ i + 1 }}</h3>
+                <div class="form-group">
+                    <label>Project Name</label>
+                    <input type="text" name="proj_name_{{ i }}" placeholder="E-commerce Website">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="proj_description_{{ i }}" rows="3" placeholder="Describe the project features and your contributions..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Technologies Used</label>
+                        <input type="text" name="proj_tech_{{ i }}" placeholder="React, Node.js, MongoDB">
+                    </div>
+                    <div class="form-group">
+                        <label>Project Link</label>
+                        <input type="url" name="proj_link_{{ i }}" placeholder="https://github.com/...">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Certifications -->
+        <div class="form-section">
+            <h2>🏆 Certifications</h2>
+            <input type="hidden" name="cert_count" value="2">
+            {% for i in range(2) %}
+            <div class="nested-form cert-form">
+                <h3>Certification #{{ i + 1 }}</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Certificate Name</label>
+                        <input type="text" name="cert_name_{{ i }}" placeholder="AWS Certified Solutions Architect">
+                    </div>
+                    <div class="form-group">
+                        <label>Issuing Organization</label>
+                        <input type="text" name="cert_issuer_{{ i }}" placeholder="Amazon Web Services">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <input type="text" name="cert_year_{{ i }}" placeholder="2024">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Preview Resume</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.resume-builder-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-header p {
+    color: #94a3b8;
+}
+
+.form-section {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-section h2 {
+    color: #f8fafc;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #334155;
+}
+
+.nested-form {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.nested-form h3 {
+    color: #6366f1;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #f8fafc;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+.form-group small {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+</style>
+{% endblock %}
+

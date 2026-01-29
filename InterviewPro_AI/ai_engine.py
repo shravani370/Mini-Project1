@@ -1,4 +1,4 @@
-"""
+ """
 InterviewPro AI - AI Integration Module
 Handles interview question generation, answer evaluation, and follow-up questions
 """
@@ -151,65 +151,114 @@ QUESTION_BANK = {
 }
 
 
-def generate_questions(skills, interest, count=5):
-    """Generate interview questions based on skills and interest"""
+def generate_questions(topics, interest, count=5):
+    """Generate interview questions based on selected topics and role interest"""
     questions = []
     
-    # Map interests to categories
-    category_map = {
-        "backend": ["data_structures", "algorithms", "database", "system_design"],
-        "frontend": ["web_technologies", "oop", "data_structures"],
-        "fullstack": ["web_technologies", "database", "oop", "algorithms"],
-        "data": ["machine_learning", "algorithms", "database"],
-        "sde": ["data_structures", "algorithms", "oop", "system_design"],
-        "ai": ["machine_learning", "algorithms", "python"],
-        "default": ["data_structures", "algorithms", "oop", "behavioral"]
-    }
+    # Parse topics - handle various formats
+    if not topics or topics == "all" or (isinstance(topics, str) and topics.lower() == "all"):
+        # If no specific topics or "all" selected, use interest-based categories
+        category_map = {
+            "backend": ["data_structures", "algorithms", "database", "system_design"],
+            "frontend": ["web_technologies", "oop", "data_structures"],
+            "fullstack": ["web_technologies", "database", "oop", "algorithms"],
+            "data": ["machine_learning", "algorithms", "database"],
+            "sde": ["data_structures", "algorithms", "oop", "system_design"],
+            "ai": ["machine_learning", "algorithms", "python"],
+            "default": ["data_structures", "algorithms", "oop", "behavioral"]
+        }
+        categories = category_map.get(interest.lower() if interest else "default", category_map["default"])
+    else:
+        # Parse selected topics
+        if isinstance(topics, str):
+            # Handle comma-separated string
+            topics_list = [t.strip().lower() for t in topics.split(",") if t.strip()]
+        elif isinstance(topics, list):
+            topics_list = [t.strip().lower() for t in topics if t.strip()]
+        else:
+            topics_list = []
+        
+        # Map topic names to categories
+        topic_to_category = {
+            "dsa": "data_structures",
+            "data structures": "data_structures",
+            "data structures and algorithms": "data_structures",
+            "algorithms": "algorithms",
+            "oop": "oop",
+            "object oriented programming": "oop",
+            "database": "database",
+            "sql": "database",
+            "system design": "system_design",
+            "web": "web_technologies",
+            "web technologies": "web_technologies",
+            "machine learning": "machine_learning",
+            "ml": "machine_learning",
+            "behavioral": "behavioral",
+        }
+        
+        categories = []
+        for topic in topics_list:
+            if topic in topic_to_category:
+                categories.append(topic_to_category[topic])
+            else:
+                categories.append(topic)  # Use as-is
     
-    categories = category_map.get(interest.lower() if interest else "default", category_map["default"])
+    # Calculate how many categories to use and questions per category
+    num_categories = min(len(categories), max(2, (count + 1) // 2))
+    selected_categories = categories[:num_categories]
     
-    # Get questions from each category
-    for category in categories[:3]:
-        if category in QUESTION_BANK:
-            # Mix of difficulties
-            for difficulty in ["easy", "medium", "hard"]:
-                if category in QUESTION_BANK and difficulty in QUESTION_BANK[category]:
-                    q_list = QUESTION_BANK[category][difficulty]
-                    for q in q_list:
-                        questions.append({
-                            "category": category,
-                            "difficulty": difficulty,
-                            "question": q["q"],
-                            "ideal_answer": q["a"],
-                            "keywords": q["keywords"],
-                            "points": {"easy": 10, "medium": 15, "hard": 20}[difficulty]
-                        })
+    # Distribute questions evenly
+    base_questions = count // num_categories if num_categories > 0 else count
+    extra = count % num_categories if num_categories > 0 else 0
     
-    # Add behavioral questions
-    for difficulty in ["easy", "medium"]:
-        for q in QUESTION_BANK["behavioral"][difficulty]:
-            questions.append({
-                "category": "behavioral",
-                "difficulty": difficulty,
-                "question": q["q"],
-                "ideal_answer": q["a"],
-                "keywords": q["keywords"],
-                "points": {"easy": 10, "medium": 15}[difficulty]
-            })
+    for idx, category in enumerate(selected_categories):
+        if category not in QUESTION_BANK:
+            continue
+        
+        # Get questions for this category
+        category_questions = []
+        for difficulty in ["easy", "medium", "hard"]:
+            if difficulty in QUESTION_BANK[category]:
+                for q in QUESTION_BANK[category][difficulty]:
+                    category_questions.append({
+                        "category": category,
+                        "difficulty": difficulty,
+                        "question": q["q"],
+                        "ideal_answer": q["a"],
+                        "keywords": q["keywords"],
+                        "points": {"easy": 10, "medium": 15, "hard": 20}[difficulty]
+                    })
+        
+        # Shuffle and select specific number
+        random.shuffle(category_questions)
+        num_to_take = base_questions + (1 if idx < extra else 0)
+        questions.extend(category_questions[:num_to_take])
     
-    # Shuffle and select questions
+    # Shuffle final result
     random.shuffle(questions)
     return questions[:count]
 
 
 def evaluate_answer(question_data, user_answer):
-    """Evaluate user answer and provide feedback"""
+    """Evaluate user answer and provide accurate feedback"""
     ideal_answer = question_data.get("ideal_answer", "")
     keywords = question_data.get("keywords", [])
     question = question_data.get("question", "")
+    difficulty = question_data.get("difficulty", "medium")
     
     user_answer_lower = user_answer.lower()
     ideal_lower = ideal_answer.lower()
+    
+    if not user_answer.strip():
+        return {
+            "score": 0,
+            "feedback": "❌ No answer provided. Please attempt the question.",
+            "strengths": [],
+            "improvements": ["Provide an answer to the question"],
+            "keywords_found": [],
+            "keywords_missing": keywords,
+            "ideal_answer": ideal_answer
+        }
     
     # Find keywords present and missing
     keywords_found = []
@@ -221,65 +270,153 @@ def evaluate_answer(question_data, user_answer):
         else:
             keywords_missing.append(keyword)
     
-    # Calculate keyword match percentage
-    if len(keywords) > 0:
-        keyword_match = len(keywords_found) / len(keywords)
+    # Calculate comprehensive score
+    score = 0
+    
+    # 1. Keyword Coverage (30%)
+    keyword_coverage = len(keywords_found) / len(keywords) if keywords else 0
+    keyword_score = keyword_coverage * 30
+    
+    # 2. Answer Length Appropriateness (20%)
+    # Expected length varies by difficulty
+    expected_min = {"easy": 30, "medium": 60, "hard": 100}
+    expected_max = {"easy": 150, "medium": 300, "hard": 500}
+    
+    min_len = expected_min.get(difficulty, 60)
+    max_len = expected_max.get(difficulty, 300)
+    answer_len = len(user_answer)
+    
+    if answer_len < min_len:
+        length_score = (answer_len / min_len) * 10
+    elif answer_len > max_len:
+        length_score = max(0, 10 - (answer_len - max_len) / 100 * 5)
     else:
-        keyword_match = 0
+        length_score = 10
     
-    # Answer length scoring
-    min_length = 20
-    length_score = min(len(user_answer) / min_length, 1.0) if len(user_answer) >= min_length else 0.3
+    # 3. Technical Content Analysis (25%)
+    technical_score = 0
     
-    # Keyword importance (60%) + length (40%)
-    raw_score = (keyword_match * 0.6 + length_score * 0.4) * 100
+    # Check for technical indicators
+    technical_indicators = [
+        "because", "for example", "such as", "instance", "this means",
+        "the reason", "specifically", "in particular", "which is"
+    ]
     
-    # Adjust based on answer quality
-    if len(user_answer) < 30:
-        raw_score *= 0.5  # Too short
-    elif "because" in user_answer_lower or "for example" in user_answer_lower:
-        raw_score *= 1.1  # Good explanation
+    explanation_words = sum(1 for word in technical_indicators if word in user_answer_lower)
+    technical_score = min(25, explanation_words * 5)
     
-    # Cap score
-    score = min(int(raw_score), 100)
+    # Bonus for specific technical terms not in keywords
+    bonus_terms = ["complexity", "algorithm", "implementation", "optimization", "efficient"]
+    bonus_score = sum(3 for term in bonus_terms if term in user_answer_lower)
+    technical_score = min(25, technical_score + bonus_score)
+    
+    # 4. Clarity and Structure (15%)
+    clarity_score = 0
+    
+    # Check for structured response indicators
+    structure_indicators = ["first", "second", "third", "step", "however", "therefore"]
+    structure_words = sum(1 for word in structure_indicators if word in user_answer_lower)
+    clarity_score = min(15, structure_words * 3)
+    
+    # Check for proper sentences
+    sentences = user_answer.split('.')
+    if len(sentences) >= 2:
+        clarity_score += 5
+    if len(sentences) >= 4:
+        clarity_score += 5
+    
+    # 5. Relevance Check (10%)
+    relevance_score = 10
+    # Check if answer is relevant by looking for key question words
+    question_words = ["what", "how", "why", "explain", "describe", "difference"]
+    if any(word in user_answer_lower for word in question_words[:3]):
+        relevance_score = 10
+    else:
+        # Check for direct answer indicators
+        if len(user_answer) > 20:
+            relevance_score = 8
+        else:
+            relevance_score = 5
+    
+    # Calculate total score
+    total_score = keyword_score + length_score + technical_score + clarity_score + relevance_score
+    
+    # Difficulty adjustment
+    difficulty_multiplier = {"easy": 1.1, "medium": 1.0, "hard": 0.9}
+    total_score = total_score * difficulty_multiplier.get(difficulty, 1.0)
+    
+    # Cap score between 0-100
+    score = min(100, max(0, int(total_score)))
     
     # Generate feedback
     feedback_parts = []
     
-    if score >= 80:
-        feedback_parts.append("✅ Excellent answer!")
-    elif score >= 60:
-        feedback_parts.append("👍 Good attempt!")
+    if score >= 85:
+        feedback_parts.append("🌟 Excellent answer! Very well articulated!")
+    elif score >= 70:
+        feedback_parts.append("✅ Strong answer! Good technical coverage.")
+    elif score >= 55:
+        feedback_parts.append("👍 Good attempt! Room for improvement.")
     elif score >= 40:
-        feedback_parts.append("⚠️ Room for improvement.")
+        feedback_parts.append("⚠️ Fair answer. Needs more depth.")
     else:
-        feedback_parts.append("❌ Needs more preparation.")
+        feedback_parts.append("💪 Keep practicing! Focus on key concepts.")
     
     # Add specific feedback
-    if keywords_found:
-        feedback_parts.append(f"Covered {len(keywords_found)}/{len(keywords)} key concepts: {', '.join(keywords_found[:3])}")
+    coverage_pct = int(keyword_coverage * 100)
+    feedback_parts.append(f"Key concepts covered: {coverage_pct}%")
     
-    if keywords_missing:
-        feedback_parts.append(f"Missing key points: {', '.join(keywords_missing[:3])}")
+    if keywords_missing and len(keywords_missing) <= 3:
+        feedback_parts.append(f"Consider including: {', '.join(keywords_missing)}")
     
-    if len(user_answer) < 50:
-        feedback_parts.append("Tip: Provide more detailed explanations with examples.")
+    # Add length feedback
+    if answer_len < min_len:
+        feedback_parts.append(f"Tip: Expand your answer (aim for {min_len}+ characters)")
+    elif answer_len > max_len:
+        feedback_parts.append("Tip: Be more concise while covering key points")
     
     # Strengths and improvements
-    strengths = keywords_found[:3] if keywords_found else ["Attempted to answer"]
-    improvements = keywords_missing[:3] if keywords_missing else ["Add more details"]
+    strengths = []
+    if keyword_coverage >= 0.6:
+        strengths.append("Good keyword coverage")
+    if len(user_answer) >= min_len:
+        strengths.append("Adequate answer length")
+    if technical_score >= 15:
+        strengths.append("Clear technical explanation")
+    if clarity_score >= 10:
+        strengths.append("Well-structured response")
     
-    if len(user_answer) < 50:
-        improvements.append("Include more specific examples")
+    if not strengths:
+        strengths = keywords_found[:2] if keywords_found else ["Attempted the question"]
+    
+    improvements = []
+    if keyword_coverage < 0.6:
+        improvements.append("Include more key technical terms")
+    if answer_len < min_len:
+        improvements.append("Provide more detailed explanations")
+    if technical_score < 10:
+        improvements.append("Add examples or use cases")
+    if clarity_score < 8:
+        improvements.append("Structure your answer better")
+    
+    if not improvements:
+        improvements = ["Maintain this quality!"] if score >= 70 else ["Review the ideal answer"]
     
     return {
         "score": score,
         "feedback": " ".join(feedback_parts),
-        "strengths": strengths,
-        "improvements": improvements,
+        "strengths": strengths[:3],
+        "improvements": improvements[:3],
         "keywords_found": keywords_found,
         "keywords_missing": keywords_missing,
-        "ideal_answer": ideal_answer
+        "ideal_answer": ideal_answer,
+        "analysis": {
+            "keyword_score": round(keyword_score, 1),
+            "length_score": round(length_score, 1),
+            "technical_score": round(technical_score, 1),
+            "clarity_score": round(clarity_score, 1),
+            "relevance_score": round(relevance_score, 1)
+        }
     }
 
 
