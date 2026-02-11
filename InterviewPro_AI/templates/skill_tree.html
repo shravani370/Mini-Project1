@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding: 2rem;">
+    <div class="page-header">
+        <h1>🌳 Skill Tree</h1>
+        <p>Visualize your journey from novice to interview master!</p>
+    </div>
+
+    <!-- Progress Overview -->
+    <div class="welcome-banner" style="margin-bottom: 2rem;">
+        <div class="welcome-content">
+            <h3>📊 Your Progress</h3>
+            <p>Track which skills you've mastered and what's next!</p>
+        </div>
+        <div class="xp-container">
+            <div class="xp-header">
+                <div class="xp-label">
+                    <span>🎯</span>
+                    <span>Skills Mastered</span>
+                </div>
+                <div class="xp-value">{{ unlocked_skills }} / {{ total_skills }}</div>
+            </div>
+            <div class="xp-bar">
+                <div class="xp-fill" style="width: {{ (unlocked_skills / total_skills * 100) }}%"></div>
+            </div>
+            <div class="xp-level">
+                <span style="color: var(--primary-light);">{{ total_skills - unlocked_skills }}</span> skills remaining
+            </div>
+        </div>
+    </div>
+
+    <!-- Skill Categories -->
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;">
+        {% for category_id, category in skill_tree.items() %}
+        <div class="card">
+            <h3 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <span style="font-size: 2rem;">{{ category.icon }}</span>
+                {{ category.name }}
+            </h3>
+            
+            <div class="skill-tree">
+                {% for skill in category.skills %}
+                <div class="skill-node {{ skill.status }}">
+                    <div class="skill-icon">{{ skill.icon }}</div>
+                    <div class="skill-info">
+                        <div class="skill-name">{{ skill.name }}</div>
+                        <div class="skill-description">{{ skill.description }}</div>
+                    </div>
+                    <div class="skill-status {{ skill.status }}">
+                        {% if skill.status == 'unlocked' %}
+                        ✓ Unlocked
+                        {% else %}
+                        🔒 Locked
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Legend -->
+    <div class="card" style="margin-top: 2rem;">
+        <h3 style="margin-bottom: 1rem;">📖 Legend</h3>
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 40px; height: 40px; background: var(--gradient-1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">✓</div>
+                <div>
+                    <strong>Unlocked</strong>
+                    <p style="font-size: 0.8rem; margin: 0;">Skill completed</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 40px; height: 40px; background: var(--bg-glass); border: 2px solid var(--border-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; filter: grayscale(1); opacity: 0.5;">🔒</div>
+                <div>
+                    <strong>Locked</strong>
+                    <p style="font-size: 0.8rem; margin: 0;">Complete prerequisites</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1)); border-color: var(--success);">
+        <h3 style="margin-bottom: 1rem;">💡 Pro Tips</h3>
+        <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;">🎯 Complete interviews to unlock new skills</li>
+            <li style="margin-bottom: 0.5rem;">🏆 Earn badges to unlock advanced skills</li>
+            <li style="margin-bottom: 0.5rem;">🔥 Maintain your streak for bonus XP</li>
+            <li>⚔️ Participate in tournaments for exclusive skill unlocks</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+

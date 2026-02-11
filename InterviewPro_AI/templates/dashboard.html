@@ -1,135 +1,247 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="dashboard-container">
-    <!-- Welcome Header -->
-    <div class="welcome-header">
-        <div class="welcome-text">
-            <h1>Welcome back, {{ session.get('first_name', 'Student') }}! 👋</h1>
-            <p>Ready to ace your next interview?</p>
+<div class="dashboard-container" style="padding: 2rem;">
+    <!-- Welcome Banner - Large -->
+    <div class="welcome-banner-large">
+        <div class="welcome-main">
+            <h1 class="welcome-title">Welcome back, <span>{{ session.get('first_name', 'Champion') }}</span> 👋</h1>
+            <p class="welcome-subtitle">Ready to level up your interview skills?</p>
+            <div class="welcome-actions">
+                <a href="{{ url_for('start_interview') }}" class="btn btn-primary btn-lg">
+                    <span>🎯</span> Start Interview
+                </a>
+            </div>
         </div>
-        <div class="quick-stats">
-            <div class="stat-card">
-                <span class="stat-value">{{ student.total_interviews if student else 0 }}</span>
-                <span class="stat-label">Interviews</span>
+        <div class="user-stats-large">
+            <div class="stat-pill-large">
+                <div class="stat-icon-large">⚡</div>
+                <div class="stat-info-large">
+                    <div class="stat-value-large">{{ session.get('xp', 0) }}</div>
+                    <div class="stat-label-large">Total XP</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-value">{{ "%.1f"|format(student.avg_score) if student and student.avg_score else 0 }}%</span>
-                <span class="stat-label">Avg Score</span>
+            <div class="stat-pill-large">
+                <div class="stat-icon-large">🔥</div>
+                <div class="stat-info-large">
+                    <div class="stat-value-large">{{ session.get('streak', 0) }}</div>
+                    <div class="stat-label-large">Day Streak</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-value">{{ achievements|length }}</span>
-                <span class="stat-label">Badges</span>
+            <div class="stat-pill-large level-pill-large">
+                <div class="stat-icon-large">⭐</div>
+                <div class="stat-info-large">
+                    <div class="stat-value-large">Level {{ (session.get('xp', 0) // 500) + 1 }}</div>
+                    <div class="stat-label-large">Current Level</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Content Grid -->
+    <!-- Main Stats Row -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-info">
+                <div class="stat-number">{{ student.total_interviews if student else 0 }}</div>
+                <div class="stat-label">Interviews</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+                <div class="stat-number">{{ "%.0f"|format(student.avg_score) if student and student.avg_score else 0 }}%</div>
+                <div class="stat-label">Avg Score</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-info">
+                <div class="stat-number">{{ achievements|length }}</div>
+                <div class="stat-label">Badges</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⚔️</div>
+            <div class="stat-info">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Tournaments</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Grid -->
     <div class="dashboard-grid">
-        <!-- Quick Actions -->
-        <div class="dashboard-card action-card">
-            <h2>🚀 Quick Actions</h2>
-            <div class="action-buttons">
-                <a href="{{ url_for('start_interview') }}" class="action-btn primary">
-                    <span class="action-icon">🎯</span>
-                    <span class="action-text">
-                        <strong>Start Interview</strong>
-                        <small>Practice now</small>
-                    </span>
-                </a>
-                <a href="{{ url_for('challenges') }}" class="action-btn">
-                    <span class="action-icon">🏆</span>
-                    <span class="action-text">
-                        <strong>Daily Challenges</strong>
-                        <small>Earn XP</small>
-                    </span>
-                </a>
-                <a href="{{ url_for('assessment') }}" class="action-btn">
-                    <span class="action-icon">🧠</span>
-                    <span class="action-text">
-                        <strong>Skills Assessment</strong>
-                        <small>Test yourself</small>
-                    </span>
-                </a>
-                <a href="{{ url_for('analytics') }}" class="action-btn">
-                    <span class="action-icon">📊</span>
-                    <span class="action-text">
-                        <strong>Analytics</strong>
-                        <small>View progress</small>
-                    </span>
-                </a>
+        <!-- Left Column -->
+        <div class="dashboard-column">
+            <!-- Quick Actions - Dropdown -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h2 class="section-title">🚀 Quick Actions</h2>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <span>All Actions</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('start_interview') }}" class="dropdown-item">
+                                <span class="dropdown-icon">🎯</span>
+                                <span>Start Interview</span>
+                            </a>
+                            <a href="{{ url_for('challenges') }}" class="dropdown-item">
+                                <span class="dropdown-icon">🏆</span>
+                                <span>Daily Challenges</span>
+                            </a>
+                            <a href="{{ url_for('tournaments') }}" class="dropdown-item">
+                                <span class="dropdown-icon">⚔️</span>
+                                <span>Tournaments</span>
+                            </a>
+                            <a href="{{ url_for('skill_tree') }}" class="dropdown-item">
+                                <span class="dropdown-icon">🌳</span>
+                                <span>Skill Tree</span>
+                            </a>
+                            <a href="{{ url_for('leaderboard') }}" class="dropdown-item">
+                                <span class="dropdown-icon">📈</span>
+                                <span>Leaderboard</span>
+                            </a>
+                            <a href="{{ url_for('assessment') }}" class="dropdown-item">
+                                <span class="dropdown-icon">🧠</span>
+                                <span>Assessment</span>
+                            </a>
+                            <a href="{{ url_for('resume_builder') }}" class="dropdown-item">
+                                <span class="dropdown-icon">📄</span>
+                                <span>Resume Builder</span>
+                            </a>
+                            <a href="{{ url_for('progress') }}" class="dropdown-item">
+                                <span class="dropdown-icon">📊</span>
+                                <span>Analytics</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Featured Actions Grid -->
+                <div class="featured-actions">
+                    <a href="{{ url_for('start_interview') }}" class="featured-action-card">
+                        <span class="action-icon-large">🎯</span>
+                        <span class="action-name">Start Interview</span>
+                    </a>
+                    <a href="{{ url_for('challenges') }}" class="featured-action-card">
+                        <span class="action-icon-large">🏆</span>
+                        <span class="action-name">Challenges</span>
+                    </a>
+                    <a href="{{ url_for('tournaments') }}" class="featured-action-card">
+                        <span class="action-icon-large">⚔️</span>
+                        <span class="action-name">Tournaments</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Active Challenges -->
+            <div class="section-card">
+                <h2 class="section-title">🎯 Active Challenges</h2>
+                <div class="challenges-list">
+                    <div class="challenge-item daily">
+                        <div class="challenge-icon">🔥</div>
+                        <div class="challenge-info">
+                            <span class="challenge-name">Daily Streak</span>
+                            <span class="challenge-meta">Day {{ session.get('streak', 0) }} of 3</span>
+                        </div>
+                        <div class="challenge-progress">
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: {{ (session.get('streak', 0) / 3 * 100) if (session.get('streak', 0) / 3 * 100) < 100 else 100 }}%"></div>
+                            </div>
+                            <span class="challenge-reward">+50 XP</span>
+                        </div>
+                    </div>
+                    <div class="challenge-item">
+                        <div class="challenge-icon">🎯</div>
+                        <div class="challenge-info">
+                            <span class="challenge-name">Interview Novice</span>
+                            <span class="challenge-meta">{% if student and student.total_interviews > 0 %}Completed{% else %}0 / 1{% endif %}</span>
+                        </div>
+                        <div class="challenge-progress">
+                            <div class="progress-track">
+                                <div class="progress-fill{% if student and student.total_interviews > 0 %} completed{% endif %}" style="width: {% if student and student.total_interviews > 0 %}100%{% else %}0%{% endif %}"></div>
+                            </div>
+                            <span class="challenge-reward">+100 XP</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Recent Sessions -->
-        <div class="dashboard-card sessions-card">
-            <h2>📊 Recent Interviews</h2>
+        <!-- Right Column -->
+        <div class="dashboard-column">
+            <!-- Recent Interviews -->
             {% if sessions %}
-            <div class="sessions-list">
-                {% for session_item in sessions %}
-                <div class="session-item">
-                    <div class="session-info">
-                        <span class="session-type">{{ session_item.session_type|title }} Interview</span>
-                        <span class="session-date">{{ session_item.started_at.strftime('%B %d, %Y') }}</span>
+            <div class="section-card">
+                <h2 class="section-title">📋 Recent Interviews</h2>
+                <div class="interviews-list">
+                    {% for session_item in sessions[:3] %}
+                    <div class="interview-item">
+                        <div class="interview-type">
+                            <span class="type-icon">🎤</span>
+                            <span class="type-name">{{ session_item.session_type|title }}</span>
+                        </div>
+                        <div class="interview-score{% if session_item.percentage >= 70 %} high{% elif session_item.percentage >= 50 %} medium{% else %} low{% endif %}">
+                            {{ "%.0f"|format(session_item.percentage) }}%
+                        </div>
+                        <div class="interview-date">{{ session_item.started_at.strftime('%b %d') }}</div>
                     </div>
-                    <div class="session-score {% if session_item.percentage >= 70 %}good{% elif session_item.percentage >= 50 %}medium{% else %}low{% endif %}">
-                        {{ "%.0f"|format(session_item.percentage) }}%
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            <a href="{{ url_for('progress') }}" class="view-all-link">View All Sessions →</a>
-            {% else %}
-            <div class="empty-state">
-                <span class="empty-icon">📋</span>
-                <p>No interviews yet. Start your first mock interview!</p>
-                <a href="{{ url_for('start_interview') }}" class="btn btn-primary-small">Start Interview</a>
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- Achievements -->
-        <div class="dashboard-card achievements-card">
-            <h2>🏆 Achievements</h2>
-            {% if achievements %}
-            <div class="achievements-grid">
-                {% for achievement in achievements[:6] %}
-                <div class="achievement-badge" title="{{ achievement.description }}">
-                    <span class="badge-icon">{{ achievement.icon }}</span>
-                    <span class="badge-name">{{ achievement.name }}</span>
-                </div>
-                {% endfor %}
-            </div>
-            <a href="{{ url_for('progress') }}" class="view-all-link">View All Badges →</a>
-            {% else %}
-            <div class="empty-state">
-                <span class="empty-icon">🏆</span>
-                <p>Complete interviews to earn badges!</p>
-            </div>
-            {% endif %}
-            
-            <!-- Locked Achievements Preview -->
-            {% set achievement_ids = achievements|map(attribute='id')|list %}
-            <div class="locked-preview">
-                <h4>Locked Achievements</h4>
-                <div class="locked-badges">
-                    {% for all_ach in all_achievements[:4] %}
-                    {% if all_ach.id not in achievement_ids %}
-                    <div class="locked-badge" title="{{ all_ach.description }}">
-                        <span class="badge-icon">{{ all_ach.icon }}</span>
-                    </div>
-                    {% endif %}
                     {% endfor %}
                 </div>
+                <a href="{{ url_for('progress') }}" class="view-all-link">View All →</a>
+            </div>
+            {% endif %}
+
+            <!-- Recent Badges -->
+            <div class="section-card">
+                <h2 class="section-title">🏆 Recent Badges</h2>
+                {% if achievements %}
+                <div class="badges-grid">
+                    {% for achievement in achievements[:4] %}
+                    <div class="badge-item">
+                        <span class="badge-icon">{{ achievement.icon }}</span>
+                        <span class="badge-name">{{ achievement.name }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <span class="empty-icon">🏆</span>
+                    <p>Complete interviews to earn badges!</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Tip of the Day -->
+            <div class="section-card tip-card">
+                <h3>💡 Interview Tip</h3>
+                <p id="tip-text">"When answering behavioral questions, use the STAR method: Situation, Task, Action, Result."</p>
+                <button class="btn-text" onclick="newTip()">New Tip →</button>
             </div>
         </div>
+    </div>
 
-        <!-- Tips Card -->
-        <div class="dashboard-card tips-card">
-            <h2>💡 Interview Tip</h2>
-            <div class="tip-content">
-                <p id="tip-text">"When answering behavioral questions, use the STAR method: Situation, Task, Action, Result."</p>
-                <button class="btn btn-outline-small" onclick="newTip()">New Tip</button>
+    <!-- Upcoming Tournaments Preview -->
+    <div class="section-card" style="margin-top: 1.5rem;">
+        <h2 class="section-title">⚔️ Upcoming Tournaments</h2>
+        <div class="tournaments-preview">
+            <div class="tournament-item featured">
+                <span class="tournament-icon">🏆</span>
+                <div class="tournament-details">
+                    <span class="tournament-name">Weekly Championship</span>
+                    <span class="tournament-info">This Weekend • 5000 XP</span>
+                </div>
+                <a href="{{ url_for('tournaments') }}" class="btn btn-sm">Join</a>
+            </div>
+            <div class="tournament-item">
+                <span class="tournament-icon">🎯</span>
+                <div class="tournament-details">
+                    <span class="tournament-name">Technical Focus</span>
+                    <span class="tournament-info">Tomorrow • 3000 XP</span>
+                </div>
+                <a href="{{ url_for('tournaments') }}" class="btn btn-sm btn-outline">Details</a>
             </div>
         </div>
     </div>
@@ -138,15 +250,13 @@
 <script>
 const tips = [
     "When answering behavioral questions, use the STAR method: Situation, Task, Action, Result.",
-    "Always explain your thought process during technical interviews - interviewers want to see how you think.",
-    "Practice coding on a whiteboard or paper to simulate real interview conditions.",
-    "Don't just list technologies you know - explain what you've built with them.",
-    "Prepare for 'Tell me about yourself' by giving a concise 2-minute summary of your background and goals.",
-    "It's okay to ask clarifying questions when stuck on a problem - shows communication skills.",
+    "Always explain your thought process during technical interviews.",
+    "Practice coding on a whiteboard to simulate real interview conditions.",
+    "Don't just list technologies - explain what you've built with them.",
+    "Prepare for 'Tell me about yourself' with a concise 2-minute summary.",
+    "It's okay to ask clarifying questions when stuck.",
     "Always test your code with edge cases during coding interviews.",
-    "Research the company culture and values before your interview.",
-    "Follow up with a thank-you email after your interview, referencing specific topics discussed.",
-    "Practice active listening - make sure you understand the question before answering."
+    "Research the company culture before your interview."
 ];
 
 function newTip() {
@@ -154,180 +264,528 @@ function newTip() {
     const randomTip = tips[Math.floor(Math.random() * tips.length)];
     tipText.style.opacity = 0;
     setTimeout(() => {
-        tipText.textContent = `"${randomTip}"`;
+        tipText.textContent = '"' + randomTip + '"';
         tipText.style.opacity = 1;
     }, 300);
 }
 </script>
-{% endblock %}
 
-{% block extra_css %}
 <style>
 .dashboard-container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
 }
 
-.welcome-header {
+/* Large Welcome Banner */
+.welcome-banner-large {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(20, 184, 166, 0.15), rgba(244, 114, 182, 0.1));
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 24px;
+    padding: 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
 }
 
-.welcome-text h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+.welcome-banner-large::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+    animation: float 8s ease-in-out infinite;
 }
 
-.welcome-text p {
-    color: #94a3b8;
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
 }
 
-.quick-stats {
-    display: flex;
-    gap: 1.5rem;
+.welcome-main {
+    position: relative;
+    z-index: 1;
 }
 
-.stat-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 16px;
-    padding: 1.25rem 2rem;
-    text-align: center;
+.welcome-title {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
 }
 
-.stat-value {
-    display: block;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #818cf8;
+.welcome-title span {
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.stat-label {
-    font-size: 0.875rem;
-    color: #94a3b8;
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 1.5rem;
-}
-
-.dashboard-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 20px;
-    padding: 1.5rem;
-}
-
-.dashboard-card h2 {
+.welcome-subtitle {
     font-size: 1.25rem;
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #334155;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
 }
 
-.action-buttons {
+.welcome-actions .btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+.user-stats-large {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
-.action-btn {
+.stat-pill-large {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    min-width: 220px;
+    transition: all 0.3s ease;
+}
+
+.stat-pill-large:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(-5px);
+}
+
+.stat-icon-large {
+    font-size: 2rem;
+}
+
+.stat-info-large {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value-large {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-label-large {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.level-pill-large {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.level-pill-large .stat-icon-large {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Section Header with Dropdown */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.dropdown-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+}
+
+.dropdown:hover .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 200px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
     border-radius: 12px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    margin-bottom: 2px;
+}
+
+.dropdown-item:hover {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--text-primary);
+}
+
+.dropdown-icon {
+    font-size: 1.1rem;
+}
+
+/* Featured Actions Grid */
+.featured-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.featured-action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
     text-decoration: none;
     transition: all 0.3s ease;
 }
 
-.action-btn:hover {
-    border-color: #6366f1;
-    transform: translateX(4px);
+.featured-action-card:hover {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: var(--primary);
+    transform: translateY(-5px);
 }
 
-.action-btn.primary {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-    border-color: #6366f1;
+.action-icon-large {
+    font-size: 2.5rem;
 }
 
-.action-icon {
+.featured-action-card .action-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+}
+
+.stat-card .stat-icon {
+    font-size: 2rem;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.dashboard-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.section-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.quick-actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.quick-action-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.quick-action-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+}
+
+.quick-action-item .action-icon {
     font-size: 1.5rem;
 }
 
-.action-text {
-    display: flex;
-    flex-direction: column;
+.quick-action-item .action-info {
+    flex: 1;
 }
 
-.action-text strong {
-    color: #f8fafc;
+.quick-action-item .action-name {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
-.action-text small {
-    color: #64748b;
+.quick-action-item .action-desc {
     font-size: 0.8rem;
+    color: var(--text-muted);
 }
 
-.sessions-list {
+.quick-action-item .action-arrow {
+    color: var(--primary-light);
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.quick-action-item:hover .action-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+.challenges-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.session-item {
+.challenge-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     padding: 1rem;
-    background: #0f172a;
+    background: rgba(255, 255, 255, 0.02);
     border-radius: 12px;
 }
 
-.session-info {
+.challenge-item .challenge-icon {
+    font-size: 1.5rem;
+}
+
+.challenge-item .challenge-info {
+    flex: 1;
+}
+
+.challenge-item .challenge-name {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.challenge-item .challenge-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.challenge-item .challenge-progress {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
 }
 
-.session-type {
+.progress-track {
+    width: 60px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-track .progress-fill {
+    height: 100%;
+    background: var(--gradient-1);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-track .progress-fill.completed {
+    background: var(--success);
+}
+
+.challenge-item .challenge-reward {
+    font-size: 0.7rem;
+    color: var(--primary-light);
+}
+
+.interviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.interview-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+}
+
+.interview-item .interview-type {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.interview-item .type-name {
     font-weight: 500;
-    color: #f8fafc;
+    color: var(--text-primary);
 }
 
-.session-date {
+.interview-item .interview-score {
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.interview-score.high {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--success);
+}
+
+.interview-score.medium {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+}
+
+.interview-score.low {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--error);
+}
+
+.interview-item .interview-date {
     font-size: 0.8rem;
-    color: #64748b;
+    color: var(--text-muted);
+    margin-left: 1rem;
 }
 
-.session-score {
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 600;
+.view-all-link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: var(--primary-light);
+    text-decoration: none;
     font-size: 0.9rem;
 }
 
-.session-score.good {
-    background: rgba(34, 197, 94, 0.1);
-    color: #22c55e;
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
 }
 
-.session-score.medium {
-    background: rgba(245, 158, 11, 0.1);
-    color: #f59e0b;
+.badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    text-align: center;
 }
 
-.session-score.low {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+.badge-item .badge-icon {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.badge-item .badge-name {
+    font-size: 0.7rem;
+    color: var(--text-muted);
 }
 
 .empty-state {
@@ -335,150 +793,129 @@ function newTip() {
     padding: 2rem;
 }
 
-.empty-icon {
-    font-size: 3rem;
+.empty-state .empty-icon {
+    font-size: 2.5rem;
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .empty-state p {
-    color: #94a3b8;
-    margin-bottom: 1rem;
+    color: var(--text-muted);
+    margin: 0;
 }
 
-.view-all-link {
-    display: block;
-    text-align: center;
-    color: #818cf8;
-    text-decoration: none;
-    margin-top: 1rem;
-    font-weight: 500;
+.tip-card {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));
+    border-color: var(--primary);
 }
 
-.view-all-link:hover {
-    text-decoration: underline;
-}
-
-.achievements-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
-.achievement-badge {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.75rem;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.achievement-badge:hover {
-    transform: scale(1.05);
-}
-
-.badge-icon {
-    font-size: 1.5rem;
-}
-
-.badge-name {
-    font-size: 0.7rem;
-    color: #e2e8f0;
-    text-align: center;
-}
-
-.locked-preview {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid #334155;
-}
-
-.locked-preview h4 {
-    font-size: 0.875rem;
-    color: #64748b;
+.tip-card h3 {
+    font-size: 1rem;
     margin-bottom: 0.75rem;
 }
 
-.locked-badges {
-    display: flex;
-    gap: 0.5rem;
+.tip-card p {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
 }
 
-.locked-badge {
-    width: 40px;
-    height: 40px;
-    background: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 8px;
+.btn-text {
+    background: none;
+    border: none;
+    color: var(--primary-light);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0;
+}
+
+.tournaments-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.tournament-item {
     display: flex;
     align-items: center;
-    justify-content: center;
-    filter: grayscale(1);
-    opacity: 0.5;
-}
-
-.tip-content {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
     border-radius: 12px;
-    padding: 1.5rem;
 }
 
-.tip-content p {
-    font-style: italic;
-    color: #e2e8f0;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    transition: opacity 0.3s ease;
-}
-
-.btn-primary-small {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.btn-outline-small {
-    background: transparent;
-    color: #818cf8;
-    padding: 0.5rem 1rem;
-    border: 1px solid #6366f1;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
-}
-
-.btn-outline-small:hover {
+.tournament-item.featured {
     background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
-@media (max-width: 768px) {
-    .welcome-header {
+.tournament-item .tournament-icon {
+    font-size: 1.5rem;
+}
+
+.tournament-item .tournament-details {
+    flex: 1;
+}
+
+.tournament-item .tournament-name {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.tournament-item .tournament-info {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 992px) {
+    .welcome-banner {
         flex-direction: column;
-        align-items: flex-start;
+        text-align: center;
+        gap: 1.5rem;
     }
     
-    .quick-stats {
-        width: 100%;
-        justify-content: space-between;
+    .user-stats {
+        flex-wrap: wrap;
+        justify-content: center;
     }
     
-    .stat-card {
-        padding: 1rem;
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .stat-value {
-        font-size: 1.5rem;
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tournaments-preview {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .welcome-actions {
+        flex-direction: column;
+    }
+    
+    .user-stats {
+        flex-direction: column;
+    }
+    
+    .stat-pill {
+        justify-content: center;
     }
 }
 </style>
 {% endblock %}
+

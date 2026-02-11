@@ -8,6 +8,9 @@ import os
 from datetime import datetime, timedelta
 from models import db
 import random
+import base64
+from io import BytesIO
+from PIL import Image
 
 app = Flask(__name__)
 app.secret_key = "interviewpro_secret_key_2024"
@@ -584,6 +587,13 @@ def xp_details():
         {"name": "Social Butterfly", "icon": "🦋", "xp": 50, "desc": "Share your progress on social media"},
         {"name": "Night Owl", "icon": "🦉", "xp": 50, "desc": "Practice after midnight"},
         {"name": "Early Bird", "icon": "🐦", "xp": 50, "desc": "Practice before 6 AM"},
+        {"name": "Interview Master", "icon": "👑", "xp": 500, "desc": "Complete 50 interviews"},
+        {"name": "Perfectionist", "icon": "💎", "xp": 300, "desc": "Get 90%+ score 10 times"},
+        {"name": "Streak Legend", "icon": "🏅", "xp": 400, "desc": "30-day practice streak"},
+        {"name": "Tournament Champion", "icon": "🏆", "xp": 1000, "desc": "Win a tournament"},
+        {"name": "Helpful Hero", "icon": "🦸", "xp": 150, "desc": "Give 10 helpful peer reviews"},
+        {"name": "Skill Master", "icon": "🎯", "xp": 250, "desc": "Complete all skills in a category"},
+        {"name": "Resume Expert", "icon": "📄", "xp": 100, "desc": "Build 5 resumes"},
     ]
     
     earned_xp = user_xp
@@ -596,6 +606,253 @@ def xp_details():
                            badges=all_badges,
                            earned_xp=earned_xp,
                            total_possible=total_possible)
+
+
+# ==================== TOURNAMENTS ====================
+
+@app.route("/tournaments")
+def tournaments():
+    """Tournaments page"""
+    if not is_logged_in():
+        return redirect(url_for("login"))
+    
+    tournaments_list = [
+        {
+            "id": 1,
+            "name": "Weekly Championship",
+            "icon": "🏆",
+            "description": "Compete against other candidates for the top spot!",
+            "type": "featured",
+            "entry_fee": 0,
+            "prize_pool": "5000 XP",
+            "participants": 127,
+            "start_date": "Saturday, 8:00 PM",
+            "duration": "2 hours",
+            "status": "open"
+        },
+        {
+            "id": 2,
+            "name": "Technical Focus",
+            "icon": "🎯",
+            "description": "Data structures & algorithms intensive tournament.",
+            "type": "technical",
+            "entry_fee": "500 XP",
+            "prize_pool": "3000 XP",
+            "participants": 64,
+            "start_date": "Tomorrow, 7:00 PM",
+            "duration": "1.5 hours",
+            "status": "open"
+        },
+        {
+            "id": 3,
+            "name": "Behavioral Round",
+            "icon": "💬",
+            "description": "Master soft skills and behavioral questions.",
+            "type": "behavioral",
+            "entry_fee": 0,
+            "prize_pool": "2000 XP",
+            "participants": 89,
+            "start_date": "Friday, 6:00 PM",
+            "duration": "1 hour",
+            "status": "open"
+        },
+        {
+            "id": 4,
+            "name": "System Design",
+            "icon": "🏗️",
+            "description": "Complex system design challenges.",
+            "type": "advanced",
+            "entry_fee": "1000 XP",
+            "prize_pool": "8000 XP",
+            "participants": 32,
+            "start_date": "Next Sunday",
+            "duration": "3 hours",
+            "status": "coming_soon"
+        },
+    ]
+    
+    user_xp = session.get("xp", 0)
+    my_registrations = []  # User's registered tournaments
+    
+    return render_template("tournaments.html",
+                           tournaments=tournaments_list,
+                           user_xp=user_xp,
+                           registrations=my_registrations)
+
+
+@app.route("/tournaments/register/<int:tournament_id>")
+def tournament_register(tournament_id):
+    """Register for a tournament"""
+    if not is_logged_in():
+        return redirect(url_for("login"))
+    
+    # In a real app, handle registration logic
+    return redirect(url_for("tournaments"))
+
+
+# ==================== SKILL TREE ====================
+
+@app.route("/skill-tree")
+def skill_tree():
+    """Skill tree visualization"""
+    if not is_logged_in():
+        return redirect(url_for("login"))
+    
+    # Skill tree data
+    skill_tree = {
+        "technical": {
+            "name": "Technical Skills",
+            "icon": "💻",
+            "skills": [
+                {"id": 1, "name": "Data Structures", "icon": "📊", "status": "unlocked", "description": "Arrays, Linked Lists, Trees, Graphs"},
+                {"id": 2, "name": "Algorithms", "icon": "🧮", "status": "unlocked", "description": "Sorting, Searching, Dynamic Programming"},
+                {"id": 3, "name": "System Design", "icon": "🏗️", "status": "locked", "description": "Scalable Architecture Design"},
+                {"id": 4, "name": "Database Design", "icon": "🗄️", "status": "locked", "description": "SQL, NoSQL, Schema Design"},
+                {"id": 5, "name": "OS Concepts", "icon": "⚙️", "status": "locked", "description": "Processes, Threads, Memory Management"},
+            ]
+        },
+        "coding": {
+            "name": "Coding", 
+            "icon": "⌨️",
+            "skills": [
+                {"id": 6, "name": "Python", "icon": "🐍", "status": "unlocked", "description": "Python programming language"},
+                {"id": 7, "name": "JavaScript", "icon": "📜", "status": "unlocked", "description": "JS fundamentals and ES6+"},
+                {"id": 8, "name": "Java", "icon": "☕", "status": "locked", "description": "Java OOP and patterns"},
+                {"id": 9, "name": "C++", "icon": "⚡", "status": "locked", "description": "C++ programming"},
+                {"id": 10, "name": "Go/Rust", "icon": "🚀", "status": "locked", "description": "Modern systems languages"},
+            ]
+        },
+        "soft_skills": {
+            "name": "Soft Skills",
+            "icon": "🤝",
+            "skills": [
+                {"id": 11, "name": "Communication", "icon": "💬", "status": "unlocked", "description": "Clear expression of ideas"},
+                {"id": 12, "name": "Problem Solving", "icon": "🧩", "status": "unlocked", "description": "Analytical thinking approach"},
+                {"id": 13, "name": "Leadership", "icon": "👑", "status": "locked", "description": "Team management skills"},
+                {"id": 14, "name": "Time Management", "icon": "⏰", "status": "locked", "description": "Efficient task prioritization"},
+                {"id": 15, "name": "Adaptability", "icon": "🔄", "status": "locked", "description": "Handling change gracefully"},
+            ]
+        },
+        "behavioral": {
+            "name": "Behavioral",
+            "icon": "🎭",
+            "skills": [
+                {"id": 16, "name": "STAR Method", "icon": "⭐", "status": "unlocked", "description": "Situation, Task, Action, Result"},
+                {"id": 17, "name": "Conflict Resolution", "icon": "⚖️", "status": "locked", "description": "Handling disagreements"},
+                {"id": 18, "name": "Company Research", "icon": "🔍", "status": "locked", "description": "Preparing for interviews"},
+                {"id": 19, "name": "Culture Fit", "icon": "🎯", "status": "locked", "description": "Aligning with company values"},
+                {"id": 20, "name": "Negotiation", "icon": "💰", "status": "locked", "description": "Salary and benefits negotiation"},
+            ]
+        }
+    }
+    
+    # Calculate progress
+    total_skills = sum(len(cat["skills"]) for cat in skill_tree.values())
+    unlocked_skills = sum(1 for cat in skill_tree.values() for skill in cat["skills"] if skill["status"] == "unlocked")
+    
+    return render_template("skill_tree.html",
+                           skill_tree=skill_tree,
+                           total_skills=total_skills,
+                           unlocked_skills=unlocked_skills)
+
+
+# ==================== PEER REVIEWS ====================
+
+@app.route("/peer-review")
+def peer_review():
+    """Peer review system"""
+    if not is_logged_in():
+        return redirect(url_for("login"))
+    
+    # Mock pending reviews
+    pending_reviews = [
+        {
+            "id": 1,
+            "user": "Alex Chen",
+            "avatar": "🎯",
+            "interview_type": "Technical",
+            "date": "2 hours ago",
+            "score": 75,
+            "question": "Explain the difference between REST and GraphQL APIs."
+        },
+        {
+            "id": 2,
+            "user": "Sarah Kim",
+            "avatar": "🚀",
+            "interview_type": "Behavioral",
+            "date": "5 hours ago",
+            "score": 82,
+            "question": "Tell me about a time you had a conflict with a teammate."
+        }
+    ]
+    
+    return render_template("peer_review.html", reviews=pending_reviews)
+
+
+@app.route("/peer-review/submit/<int:review_id>", methods=["POST"])
+def submit_peer_review(review_id):
+    """Submit a peer review"""
+    if not is_logged_in():
+        return redirect(url_for("login"))
+    
+    # In a real app, save the review and award XP
+    session["xp"] = session.get("xp", 0) + 25
+    
+    return redirect(url_for("peer_review"))
+
+
+# ==================== AI INTERVIEWER PERSONALITIES ====================
+
+@app.route("/interview-personalities")
+def interview_personalities():
+    """AI Interviewer personalities selection"""
+    if not is_logged_in():
+        return redirect(url_for("login"))
+    
+    personalities = [
+        {
+            "id": "strict_manager",
+            "name": "Strict Manager",
+            "icon": "👔",
+            "description": "Tough technical questions with high expectations",
+            "style": "Direct and challenging",
+            "difficulty": "Hard"
+        },
+        {
+            "id": "friendly_mentor",
+            "name": "Friendly Mentor",
+            "icon": "😊",
+            "description": "Encouraging feedback and helpful hints",
+            "style": "Supportive and educational",
+            "difficulty": "Medium"
+        },
+        {
+            "id": "startup_founder",
+            "name": "Startup Founder",
+            "icon": "🚀",
+            "description": "Product-focused and business-oriented questions",
+            "style": "Fast-paced and pragmatic",
+            "difficulty": "Medium"
+        },
+        {
+            "id": "big_tech_lead",
+            "name": "Big Tech Lead",
+            "icon": "🏢",
+            "description": "System design heavy with detailed discussions",
+            "style": "Thorough and analytical",
+            "difficulty": "Hard"
+        },
+        {
+            "id": "hr_manager",
+            "name": "HR Manager",
+            "icon": "👩‍💼",
+            "description": "Behavioral and culture fit focused",
+            "style": "Warm and conversational",
+            "difficulty": "Easy"
+        }
+    ]
+    
+    return render_template("interview_personalities.html", personalities=personalities)
 
 
 @app.route("/resume", methods=["GET", "POST"])
@@ -623,8 +880,37 @@ def resume_builder():
             "skills": [],
             "projects": [],
             "certifications": [],
-            "awards": []
+            "awards": [],
+            "profile_photo": None
         }
+        
+        # Handle profile photo upload
+        if 'profile_photo' in request.files:
+            file = request.files['profile_photo']
+            if file and file.filename:
+                # Validate file type
+                allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+                ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+                
+                if ext in allowed_extensions:
+                    # Read and process image
+                    image = Image.open(file)
+                    
+                    # Convert to RGB if necessary (for PNG with transparency)
+                    if image.mode in ('RGBA', 'P'):
+                        image = image.convert('RGB')
+                    
+                    # Resize to a reasonable size (max 200x250 for resume)
+                    max_size = (200, 250)
+                    image.thumbnail(max_size, Image.Resampling.LANCZOS)
+                    
+                    # Compress and encode as JPEG with quality 70
+                    output = BytesIO()
+                    image.save(output, format='JPEG', quality=70, optimize=True)
+                    image_data = output.getvalue()
+                    
+                    # Store as base64 data URL (much smaller than raw base64)
+                    resume_data["profile_photo"] = f"data:image/jpeg;base64,{base64.b64encode(image_data).decode('utf-8')}"
         
         # Education
         edu_count = int(request.form.get("edu_count", 0))

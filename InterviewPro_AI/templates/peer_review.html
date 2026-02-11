@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding: 2rem;">
+    <div class="page-header">
+        <h1>👥 Peer Review</h1>
+        <p>Help others improve and earn XP for helpful reviews!</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" style="margin-bottom: 2rem;">
+        <div class="card card-stats">
+            <span class="stat-icon">📝</span>
+            <div class="stat-value">12</div>
+            <div class="stat-label">Reviews Given</div>
+        </div>
+        <div class="card card-stats">
+            <span class="stat-icon">⭐</span>
+            <div class="stat-value">4.8</div>
+            <div class="stat-label">Avg Rating</div>
+        </div>
+        <div class="card card-stats">
+            <span class="stat-icon">⚡</span>
+            <div class="stat-value">300</div>
+            <div class="stat-label">XP Earned</div>
+        </div>
+        <div class="card card-stats">
+            <span class="stat-icon">🏅</span>
+            <div class="stat-value">3</div>
+            <div class="stat-label">Helpful Hero Badge</div>
+        </div>
+    </div>
+
+    <!-- Pending Reviews -->
+    <h2 class="section-title">📋 Pending Reviews</h2>
+    
+    {% if reviews %}
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for review in reviews %}
+        <div class="card">
+            <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--gradient-1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+                    {{ review.avatar }}
+                </div>
+                <div style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div>
+                            <h4 style="margin: 0;">{{ review.user }}</h4>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">{{ review.interview_type }} • {{ review.date }}</span>
+                        </div>
+                        <div style="background: {% if review.score >= 80 %}var(--success){% elif review.score >= 60 %}var(--warning){% else %}var(--error){% endif %}; padding: 0.5rem 1rem; border-radius: var(--radius-md); font-weight: 700;">
+                            {{ review.score }}%
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-glass); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1rem;">
+                        <p style="margin: 0; font-style: italic;">"{{ review.question }}"</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="{{ url_for('submit_peer_review', review_id=review.id) }}" class="btn btn-primary btn-sm">
+                            👍 Helpful Review
+                        </a>
+                        <button class="btn btn-secondary btn-sm">
+                            💬 Provide Feedback
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <span style="font-size: 4rem; display: block; margin-bottom: 1rem;">👀</span>
+        <h3>No Pending Reviews</h3>
+        <p>Check back later for new reviews to help with!</p>
+    </div>
+    {% endif %}
+
+    <!-- How It Works -->
+    <div class="card" style="margin-top: 2rem;">
+        <h3 style="margin-bottom: 1rem;">📖 How Peer Reviews Work</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👀</div>
+                <h4>1. Review</h4>
+                <p style="font-size: 0.9rem;">Read other users' interview answers</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">💬</div>
+                <h4>2. Provide Feedback</h4>
+                <p style="font-size: 0.9rem;">Share constructive suggestions</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏆</div>
+                <h4>3. Earn Rewards</h4>
+                <p style="font-size: 0.9rem;">Get XP for helpful reviews</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

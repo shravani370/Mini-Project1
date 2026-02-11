@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding: 2rem;">
+    <div class="page-header">
+        <h1>🎭 AI Interviewer Personalities</h1>
+        <p>Choose your interviewer! Each has a unique style and difficulty level.</p>
+    </div>
+
+    <div class="grid grid-2" style="gap: 2rem;">
+        {% for personality in personalities %}
+        <div class="card card-interactive" style="position: relative; overflow: hidden;">
+            <!-- Glow effect -->
+            <div style="position: absolute; top: -50%; right: -50%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%); pointer-events: none;"></div>
+            
+            <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gradient-1); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; flex-shrink: 0;">
+                    {{ personality.icon }}
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="margin-bottom: 0.5rem;">{{ personality.name }}</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">{{ personality.description }}</p>
+                    
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="background: var(--bg-glass); padding: 0.5rem 1rem; border-radius: var(--radius-md);">
+                            <span style="color: var(--text-muted); font-size: 0.8rem;">Style</span>
+                            <div style="font-weight: 600;">{{ personality.style }}</div>
+                        </div>
+                        <div style="background: var(--bg-glass); padding: 0.5rem 1rem; border-radius: var(--radius-md);">
+                            <span style="color: var(--text-muted); font-size: 0.8rem;">Difficulty</span>
+                            <div style="font-weight: 600; color: {% if personality.difficulty == 'Hard' %}var(--error){% elif personality.difficulty == 'Medium' %}var(--warning){% else %}var(--success){% endif %};">
+                                {{ personality.difficulty }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('start_interview') }}?personality={{ personality.id }}" class="btn btn-primary btn-block">
+                        Start Interview with {{ personality.name }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Tips -->
+    <div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));">
+        <h3 style="margin-bottom: 1rem;">💡 Pro Tip</h3>
+        <p style="margin: 0;">Try practicing with different interviewer personalities to prepare for various interview styles! The "Strict Manager" will push you to your limits, while the "Friendly Mentor" is great for building confidence.</p>
+    </div>
+</div>
+{% endblock %}
+

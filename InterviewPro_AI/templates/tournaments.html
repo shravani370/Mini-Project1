@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding: 2rem;">
+    <div class="page-header">
+        <h1>⚔️ Tournament Arena</h1>
+        <p>Compete against other candidates, win prizes, and prove your skills!</p>
+    </div>
+
+    <!-- User Stats -->
+    <div class="welcome-banner" style="margin-bottom: 2rem;">
+        <div class="welcome-content">
+            <h3>🏅 Your Tournament Stats</h3>
+            <p>Participate in tournaments to earn exclusive rewards!</p>
+        </div>
+        <div class="xp-container">
+            <div class="xp-header">
+                <div class="xp-label">
+                    <span>💰</span>
+                    <span>Available XP</span>
+                </div>
+                <div class="xp-value">{{ user_xp }} XP</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Tournaments -->
+    <h2 class="section-title">🎯 Active Tournaments</h2>
+    <div class="grid grid-3">
+        {% for tournament in tournaments %}
+        <div class="tournament-card {% if tournament.type == 'featured' %}featured{% endif %}">
+            {% if tournament.type == 'featured' %}
+            <span class="tournament-badge">Featured</span>
+            {% endif %}
+            <span class="tournament-icon">{{ tournament.icon }}</span>
+            <h3 class="tournament-name">{{ tournament.name }}</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">{{ tournament.description }}</p>
+            <div class="tournament-info">
+                <div class="tournament-info-item">
+                    <div class="tournament-info-label">Entry Fee</div>
+                    <div class="tournament-info-value">{{ tournament.entry_fee if tournament.entry_fee != 0 and tournament.entry_fee != '0' and tournament.entry_fee != 'Free' else 'Free' }}</div>
+                </div>
+                <div class="tournament-info-item">
+                    <div class="tournament-info-label">Prize Pool</div>
+                    <div class="tournament-info-value">{{ tournament.prize_pool }}</div>
+                </div>
+                <div class="tournament-info-item">
+                    <div class="tournament-info-label">Players</div>
+                    <div class="tournament-info-value">{{ tournament.participants }}</div>
+                </div>
+                <div class="tournament-info-item">
+                    <div class="tournament-info-label">Start</div>
+                    <div class="tournament-info-value">{{ tournament.start_date }}</div>
+                </div>
+            </div>
+            {% if tournament.status == 'open' %}
+            <a href="{{ url_for('tournament_register', tournament_id=tournament.id) }}" class="btn btn-primary btn-block">
+                Register Now
+            </a>
+            {% else %}
+            <button class="btn btn-secondary btn-block" disabled>
+                Coming Soon
+            </button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- How It Works -->
+    <div class="card" style="margin-top: 3rem;">
+        <h2 style="margin-bottom: 1.5rem;">📖 How Tournaments Work</h2>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;">
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+                <h4>1. Register</h4>
+                <p style="font-size: 0.9rem;">Sign up for any open tournament using your XP.</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">⏰</div>
+                <h4>2. Compete</h4>
+                <p style="font-size: 0.9rem;">Answer questions against the clock in real-time.</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🏆</div>
+                <h4>3. Win</h4>
+                <p style="font-size: 0.9rem;">Top performers share the prize pool!</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">⭐</div>
+                <h4>4. Earn</h4>
+                <p style="font-size: 0.9rem;">Get XP, badges, and climb the leaderboard.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Past Winners -->
+    <div style="margin-top: 3rem;">
+        <h2 class="section-title">🏅 Hall of Fame</h2>
+        <div class="grid grid-3">
+            <div class="leaderboard-item">
+                <div style="text-align: center; flex: 1;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥇</div>
+                    <div class="leaderboard-name">Alex Chen</div>
+                    <div class="leaderboard-title">Weekly Champion</div>
+                    <div style="color: var(--primary-light); font-weight: 600;">2500 XP</div>
+                </div>
+            </div>
+            <div class="leaderboard-item">
+                <div style="text-align: center; flex: 1;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥈</div>
+                    <div class="leaderboard-name">Sarah Kim</div>
+                    <div class="leaderboard-title">Technical Focus Winner</div>
+                    <div style="color: var(--primary-light); font-weight: 600;">1500 XP</div>
+                </div>
+            </div>
+            <div class="leaderboard-item">
+                <div style="text-align: center; flex: 1;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥉</div>
+                    <div class="leaderboard-name">Mike Johnson</div>
+                    <div class="leaderboard-title">Behavioral Round Winner</div>
+                    <div style="color: var(--primary-light); font-weight: 600;">1000 XP</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

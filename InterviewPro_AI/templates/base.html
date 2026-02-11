@@ -4,47 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}InterviewPro AI{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <!-- Particle Background -->
+    <div class="particles" id="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo">
-                <span style="font-size: 1.5rem;">🎯</span>
-                <span>InterviewPro AI</span>
+                <span class="logo-icon">🎯</span>
+                <span class="text-gradient">InterviewPro</span>
+                <span style="font-size: 0.8rem; color: var(--secondary); margin-left: 4px;">AI</span>
             </a>
             
-            <div class="nav-links">
+            <div class="nav-links" id="navLinks">
                 {% if session.get('user_id') %}
                     {% if session.get('role') == 'admin' %}
-                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link">Dashboard</a>
-                        <a href="{{ url_for('admin_questions') }}" class="nav-link">Questions</a>
-                        <a href="{{ url_for('admin_achievements') }}" class="nav-link">Achievements</a>
+                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+                            <span class="nav-icon">📊</span> Dashboard
+                        </a>
+                        <a href="{{ url_for('admin_questions') }}" class="nav-link">
+                            <span class="nav-icon">❓</span> Questions
+                        </a>
+                        <a href="{{ url_for('admin_achievements') }}" class="nav-link">
+                            <span class="nav-icon">🏆</span> Achievements
+                        </a>
                     {% else %}
-                        <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
-                        <a href="{{ url_for('start_interview') }}" class="nav-link">Start Interview</a>
-                        <a href="{{ url_for('challenges') }}" class="nav-link">Challenges</a>
-                        <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
-                        <a href="{{ url_for('resume_builder') }}" class="nav-link">Resume Builder</a>
-                        <a href="{{ url_for('assessment') }}" class="nav-link">Assessment</a>
-                        <a href="{{ url_for('analytics') }}" class="nav-link">Analytics</a>
-                        <a href="{{ url_for('xp_details') }}" class="nav-link">XP</a>
-                        <a href="{{ url_for('progress') }}" class="nav-link">Progress</a>
-                        <a href="{{ url_for('practice') }}" class="nav-link">Practice</a>
+                        <a href="{{ url_for('dashboard') }}" class="nav-link">
+                            <span class="nav-icon">🏠</span> Dashboard
+                        </a>
+                        
+                        <!-- Practice Dropdown -->
+                        <div class="dropdown">
+                            <button class="nav-link dropdown-toggle" onclick="toggleDropdown(this)">
+                                <span class="nav-icon">🎯</span> Practice
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="{{ url_for('start_interview') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">🎤</span> Start Interview
+                                </a>
+                                <a href="{{ url_for('challenges') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">🏆</span> Challenges
+                                </a>
+                                <a href="{{ url_for('tournaments') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">⚔️</span> Tournaments
+                                </a>
+                                <a href="{{ url_for('peer_review') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">👥</span> Peer Review
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Dropdown -->
+                        <div class="dropdown">
+                            <button class="nav-link dropdown-toggle" onclick="toggleDropdown(this)">
+                                <span class="nav-icon">📈</span> Progress
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="{{ url_for('leaderboard') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">🏅</span> Leaderboard
+                                </a>
+                                <a href="{{ url_for('skill_tree') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">🌳</span> Skill Tree
+                                </a>
+                                <a href="{{ url_for('assessment') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">🧠</span> Assessment
+                                </a>
+                                <a href="{{ url_for('analytics') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">📊</span> Analytics
+                                </a>
+                                <a href="{{ url_for('progress') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">📋</span> My Progress
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Tools Dropdown -->
+                        <div class="dropdown">
+                            <button class="nav-link dropdown-toggle" onclick="toggleDropdown(this)">
+                                <span class="nav-icon">🛠️</span> Tools
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="{{ url_for('resume_builder') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">📄</span> Resume Builder
+                                </a>
+                                <a href="{{ url_for('interview_personalities') }}" class="dropdown-item">
+                                    <span class="dropdown-icon">🎭</span> Interview Personalities
+                                </a>
+                            </div>
+                        </div>
                     {% endif %}
-                    <a href="{{ url_for('logout') }}" class="nav-link btn-logout">Logout</a>
+                    <div class="nav-xp">
+                        <span>⚡</span>
+                        <span class="nav-xp-value">{{ session.get('xp', 0) }} XP</span>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="nav-link btn-logout">
+                        <span class="nav-icon">🚪</span> Logout
+                    </a>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-                    <a href="{{ url_for('register') }}" class="nav-link btn-primary">Get Started</a>
+                    <a href="{{ url_for('login') }}" class="nav-link">
+                        <span class="nav-icon">🔐</span> Login
+                    </a>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">
+                        <span>🚀</span> Get Started
+                    </a>
                 {% endif %}
             </div>
             
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
         </div>
     </nav>
+
+    <!-- Achievement Popup -->
+    <div class="achievement-popup" id="achievementPopup">
+        <button class="achievement-popup-close" onclick="closeAchievementPopup()">×</button>
+        <div class="achievement-popup-content">
+            <div class="achievement-popup-icon" id="popupIcon">🏆</div>
+            <div class="achievement-popup-text">
+                <h4>Achievement Unlocked!</h4>
+                <h3 id="popupTitle">Badge Name</h3>
+                <p id="popupXP">+50 XP</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div class="confetti" id="confettiContainer"></div>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -56,37 +154,156 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4>🎯 InterviewPro AI</h4>
-                <p>Your AI-powered interview preparation platform. Practice, evaluate, and improve your interview skills.</p>
+                <p>Your AI-powered interview preparation platform. Practice, evaluate, and improve your interview skills with gamified learning!</p>
             </div>
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <a href="{{ url_for('start_interview') }}">Start Interview</a>
-                <a href="{{ url_for('practice') }}">Practice Questions</a>
-                <a href="{{ url_for('progress') }}">Track Progress</a>
+                <a href="{{ url_for('challenges') }}">Daily Challenges</a>
+                <a href="{{ url_for('tournaments') }}">Tournaments</a>
+                <a href="{{ url_for('skill_tree') }}">Skill Tree</a>
             </div>
             <div class="footer-section">
                 <h4>Resources</h4>
-                <a href="#">Interview Tips</a>
-                <a href="#">Resume Guide</a>
-                <a href="#">Career Advice</a>
+                <a href="{{ url_for('assessment') }}">Skills Assessment</a>
+                <a href="{{ url_for('resume_builder') }}">Resume Builder</a>
+                <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+                <a href="{{ url_for('progress') }}">Track Progress</a>
             </div>
             <div class="footer-section">
-                <h4>Contact</h4>
-                <p>support@interviewpro.ai</p>
-                <p>Help Center</p>
+                <h4>Connect</h4>
+                <p>📧 support@interviewpro.ai</p>
+                <p>💬 Join our community</p>
+                <p>🎓 Learn & grow together</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 InterviewPro AI. All rights reserved.</p>
+            <p>&copy; 2024 InterviewPro AI. Crafted with ❤️ for interview success!</p>
         </div>
     </footer>
 
     <script>
+        // Particle animation
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Mobile menu toggle
         function toggleMobileMenu() {
-            const navLinks = document.querySelector('.nav-links');
+            const navLinks = document.getElementById('navLinks');
             navLinks.classList.toggle('mobile-open');
         }
+        
+        // Dropdown toggle for mobile
+        function toggleDropdown(element) {
+            const dropdown = element.closest('.dropdown');
+            const menu = dropdown.querySelector('.dropdown-menu');
+            menu.style.visibility = menu.style.visibility === 'visible' ? 'hidden' : 'visible';
+            menu.style.opacity = menu.style.opacity === '1' ? '0' : '1';
+            menu.style.transform = menu.style.opacity === '1' ? 'translateY(-10px)' : 'translateY(0)';
+        }
+
+        // Achievement popup functions
+        function showAchievement(icon, title, xp) {
+            const popup = document.getElementById('achievementPopup');
+            document.getElementById('popupIcon').textContent = icon;
+            document.getElementById('popupTitle').textContent = title;
+            document.getElementById('popupXP').textContent = '+' + xp + ' XP';
+            popup.classList.add('show');
+            launchConfetti();
+            
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 5000);
+        }
+
+        function closeAchievementPopup() {
+            document.getElementById('achievementPopup').classList.remove('show');
+        }
+
+        // Confetti animation
+        function launchConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.innerHTML = '';
+            const colors = ['#8b5cf6', '#06b6d4', '#f472b6', '#10b981', '#f59e0b'];
+            
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = Math.random() * 2 + 's';
+                piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                container.appendChild(piece);
+            }
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 1rem 2rem;
+                background: ${type === 'success' ? 'var(--gradient-1)' : 'var(--gradient-fire)'};
+                color: white;
+                border-radius: var(--radius-md);
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add slide animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .toast {
+                box-shadow: var(--shadow-glow);
+            }
+        `;
+        document.head.appendChild(style);
     </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+
