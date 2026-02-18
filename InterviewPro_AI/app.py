@@ -13,7 +13,7 @@ from io import BytesIO
 from PIL import Image
 
 app = Flask(__name__)
-app.secret_key = "interviewpro_secret_key_2024"
+app.secret_key = "xxxx"
 
 # Daily Challenges Data
 DAILY_CHALLENGES = [
